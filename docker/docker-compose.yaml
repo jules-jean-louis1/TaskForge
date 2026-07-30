@@ -15,6 +15,7 @@ services:
       - ../traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ../traefik/dynamic/dynamic.yml:/etc/traefik/dynamic.yml:ro
       - ../traefik/certs:/etc/traefik/certs:ro
+      - ../traefik/.htpasswd:/etc/traefik/htpasswd:ro
     networks:
       - frontend_network
 
@@ -28,6 +29,8 @@ services:
       ENV: development
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}?sslmode=disable"
       DATABASE_TEST_URL: "postgres://${TEST_DB_USER}:${TEST_DB_PASSWORD}@database_test:5432/${TEST_DB_NAME}?sslmode=disable"
+      JWT_SECRET: "${JWT_SECRET}"
+      BACKEND_PORT_DEV: "${BACKEND_PORT_DEV}"
     working_dir: /app
     volumes:
       - ../backend:/app
@@ -48,6 +51,7 @@ services:
     environment:
       ENV: development
       API_URL: "${API_URL_DEV}"
+      JWT_SECRET: "${JWT_SECRET}"
     working_dir: /app
     volumes:
       - ../frontend:/app
