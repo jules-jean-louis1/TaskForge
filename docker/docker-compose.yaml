@@ -72,6 +72,7 @@ services:
       - backend_network
     volumes:
       - database_data:/var/lib/postgresql/data
+      - ../db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   database_test:
     image: postgres:17.2-alpine
@@ -90,6 +91,7 @@ services:
       - backend_network
     volumes:
       - pgdata_test:/var/lib/postgresql/data
+      - ../db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 networks:
   backend_network:
