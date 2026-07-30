@@ -25,8 +25,57 @@ init: env perms certs trust-certs auth_traefik # Exécute toutes les étapes d'i
 
 # --- Lancement des services Docker ---
 
+# --- DEVELOPMENT ---	
+
 launch-dev: # Lance les services Docker en mode développement avec docker-compose
 	./docker/docker.sh up -d --build
+
+remove: # Arrête les conteneurs et supprime les volumes associés (remise à zéro)
+	./docker/docker.sh down -v
+
+logs-all: # Affiche les logs de tous les conteneurs en continu
+	./docker/docker.sh logs -f
+
+logs: # Affiche les logs d'un conteneur spécifique ou général (ex: make logs s=api)
+	./docker/docker.sh logs -f $(s)
+
+ps: # Liste les conteneurs actifs et leur statut
+	./docker/docker.sh ps
+
+start: # Démarre les conteneurs existants (ex: make start ou make start s=api)
+	./docker/docker.sh start $(s)
+
+stop: # Arrête temporairement les conteneurs (ex: make stop ou make stop s=api)
+	./docker/docker.sh stop $(s)
+
+restart: # Redémarre un ou tous les conteneurs proprement (ex: make restart s=api)
+	./docker/docker.sh restart $(s)
+
+rebuild: # Force le rebuild et la relance complète d'un service (ex: make rebuild s=api)
+	./docker/docker.sh stop $(s) || true
+	./docker/docker.sh rm -f $(s) || true
+	./docker/docker.sh up -d --build $(s)
+
+remove-service: # Arrête un service, supprime son conteneur et SES VOLUMES associés (ex: make remove-service s=postgres-test)
+	@if [ -z "$(s)" ]; then \
+		echo "Erreur: Spécifiez un service (ex: make remove-service s=postgres-test)"; \
+	else \
+		./docker/docker.sh rm -f -s -v $(s); \
+	fi
+
+exec: # Ouvre un shell interactif dans un conteneur (ex: make exec s=api)
+	@if [ -z "$(s)" ]; then \
+		echo "Erreur: Vous devez spécifier un service (ex: make exec s=api)"; \
+	else \
+		./docker/docker.sh exec -it $(s) sh || ./docker/docker.sh exec -it $(s) /bin/bash; \
+	fi
+
+stats: # Affiche la consommation CPU/RAM des conteneurs en temps réel
+	docker stats
+
+clean: # Nettoie Docker en supprimant les images, conteneurs et réseaux inutilisés (Prune)
+	docker system prune -f
+	docker volume prune -f
 
 launch-prod: # Lance les services Docker en mode production avec docker-compose
 	./docker/docker.sh -f docker/docker-compose.prod.yml up -d --build
