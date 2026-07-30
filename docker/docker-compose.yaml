@@ -1,0 +1,105 @@
+services:
+  traefik:
+    image: traefik:v3.6
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD-SHELL", "traefik healthcheck --ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ../traefik/dynamic/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ../traefik/certs:/etc/traefik/certs:ro
+    networks:
+      - frontend_network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${BACKEND_PORT_DEV}:50051"
+    environment:
+      ENV: development
+      DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}?sslmode=disable"
+      DATABASE_TEST_URL: "postgres://${TEST_DB_USER}:${TEST_DB_PASSWORD}@database_test:5432/${TEST_DB_NAME}?sslmode=disable"
+    working_dir: /app
+    volumes:
+      - ../backend:/app
+      - go-cache:/go/pkg/mod
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - backend_network
+      - frontend_network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4200:4200"
+    environment:
+      ENV: development
+      API_URL: "${API_URL_DEV}"
+    working_dir: /app
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    networks:
+      - frontend_network
+
+  database:
+    image: postgres:17.2-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - backend_network
+    volumes:
+      - database_data:/var/lib/postgresql/data
+      - ../db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  database_test:
+    image: postgres:17.2-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TEST_DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${TEST_DB_USER}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+      POSTGRES_DB: ${TEST_DB_NAME}
+    ports:
+      - "${TEST_DB_PORT}:5432"
+    networks:
+      - backend_network
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+      - ../db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
+
+volumes:
+  database_data:
+  pgdata_test:
+  go-cache:
