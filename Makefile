@@ -77,6 +77,11 @@ clean: # Nettoie Docker en supprimant les images, conteneurs et réseaux inutili
 	docker system prune -f
 	docker volume prune -f
 
+# --- BACKEND ---
+
+lint-back:
+	@cd backend && golangci-lint run ./...
+
 launch-prod: # Lance les services Docker en mode production avec docker-compose
 	./docker/docker.sh -f docker/docker-compose.prod.yml up -d --build
 

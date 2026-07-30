@@ -1,0 +1,10 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  # On pointe le dossier du package main, pas le fichier seul
+  cmd = "go build -o ./tmp/main ./cmd/api"
+  full_bin = "./tmp/main" 
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+  include_ext = ["go", "tpl", "tmpl", "html"]
