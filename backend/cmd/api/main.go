@@ -1,20 +1,18 @@
 package main
 
 import (
-	"cmd/api/internal/db"
-	"cmd/api/internal/routes"
-	"cmd/api/internal/services"
 	"fmt"
 	"net/http"
 	"os"
+
+	"cmd/api/internal/db"
+	"cmd/api/internal/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	database := db.InitPostgres()
-
-	authService := services.NewAuthService(database)
+	db.InitPostgres()
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -27,7 +25,7 @@ func main() {
 		c.String(http.StatusOK, "pong")
 	})
 
-	routes.AuthRoutes(api, authService)
+	routes.AuthRoutes(api)
 
 	fmt.Println("Hello, TaskForge!")
 
