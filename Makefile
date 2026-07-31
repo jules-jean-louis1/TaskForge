@@ -85,6 +85,8 @@ lint-back:
 launch-prod: # Lance les services Docker en mode production avec docker-compose
 	./docker/docker.sh -f docker/docker-compose.prod.yml up -d --build
 
+format-back: # Formate le code source du backend avec gofumpt
+	@cd backend && gofumpt -l -w .
 
 # --- Aide ---
 

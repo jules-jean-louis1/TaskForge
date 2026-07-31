@@ -15,8 +15,10 @@ import (
 	"gorm.io/gorm"
 )
 
-var userRepo = repositories.NewUserRepository()
-var refreshTokenRepo = repositories.NewRefreshTokenRepository()
+var (
+	userRepo         = repositories.NewUserRepository()
+	refreshTokenRepo = repositories.NewRefreshTokenRepository()
+)
 
 type RegisterRequest struct {
 	Firstname string `json:"firstname" binding:"required"`
@@ -143,7 +145,10 @@ func Refresh(c *gin.Context) {
 		return
 	}
 
-	refreshTokenRepo.Revoke(tokenRecord.ID)
+	if err := refreshTokenRepo.Revoke(tokenRecord.ID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to revoke old token"})
+		return
+	}
 
 	newAccessToken, err := handler.GenerateAccesToken(user.ID, user.Firstname, user.Lastname, user.Email, string(user.Role))
 	if err != nil {
@@ -157,7 +162,11 @@ func Refresh(c *gin.Context) {
 		TokenHash: utils.HashToken(newRawRefreshToken),
 		ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
 	}
-	refreshTokenRepo.Create(&newRefreshTokenModel)
+
+	if err := refreshTokenRepo.Create(&newRefreshTokenModel); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to store new refresh token"})
+		return
+	}
 
 	c.SetCookie("refreshToken", newRawRefreshToken, 30*24*60*60, "/", "", true, true)
 	c.JSON(http.StatusOK, gin.H{"token": newAccessToken})
