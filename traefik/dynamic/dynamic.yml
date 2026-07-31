@@ -1,39 +1,69 @@
-global:
-  checkNewVersion: true
-  sendAnonymousUsage: false
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/local.crt
+      keyFile: /etc/traefik/certs/local.key
 
-entryPoints:
-  web:
-    address: :80
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
+http:
+  middlewares:
+    security-headers:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
 
-  websecure:
-    address: :443
+    compression:
+      compress: {}
 
-api:
-  dashboard: true
-  insecure: false
-  debug: false
+    api-ratelimit:
+      rateLimit:
+        average: 100
+        burst: 50
 
-ping: {}
+    dashboard-auth:
+      basicAuth:
+        usersFile: /etc/traefik/htpasswd
 
-providers:
-  docker:
-    exposedByDefault: false
-    endpoint: unix:///var/run/docker.sock
-    watch: true
-  file:
-    filename: /etc/traefik/dynamic.yml
-    watch: true
+  routers:
+    traefik:
+      rule: "Host(`traefik.localhost`)"
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls: {}
+      middlewares:
+        - dashboard-auth
+        - security-headers
 
-log:
-  level: INFO
+    backend:
+      rule: "Host(`api.localhost`)"
+      entryPoints:
+        - websecure
+      service: backend
+      tls: {}
+      middlewares:
+        - security-headers
+        - compression
+        - api-ratelimit
 
-accessLog:
-  bufferingSize: 100
-  filters:
-    statusCodes: []
+    frontend:
+      rule: "Host(`app.localhost`)"
+      entryPoints:
+        - websecure
+      service: frontend
+      tls: {}
+      middlewares:
+        - security-headers
+        - compression
+
+  services:
+    backend:
+      loadBalancer:
+        servers:
+          - url: "http://backend:50051"
+
+    frontend:
+      loadBalancer:
+        servers:
+          - url: "http://frontend:4200"
