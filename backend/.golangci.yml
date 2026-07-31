@@ -1,10 +1,11 @@
+version: 2
+
 run:
   timeout: 3m
 
 linters:
   enable:
     - errcheck    # Vérifie si les erreurs sont bien gérées
-    - gosimple    # Propose des simplifications de code
     - govet       # Détecte les erreurs suspectes
     - ineffassign # Détecte les assignations inutiles
     - staticcheck # Analyse statique poussée

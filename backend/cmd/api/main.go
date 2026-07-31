@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -29,8 +30,7 @@ func main() {
 
 	fmt.Println("Hello, TaskForge!")
 
-	env := os.Getenv("ENV")
-	if env == "development" {
-		router.Run(":" + os.Getenv("BACKEND_PORT_DEV"))
+	if err := router.Run(":" + os.Getenv("BACKEND_PORT_DEV")); err != nil {
+		log.Fatalf("Failed to run server: %v", err)
 	}
 }
