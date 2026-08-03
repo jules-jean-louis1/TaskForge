@@ -42,20 +42,15 @@ jobs:
       - name: Init database
         run: psql "$DATABASE_TEST_URL" -f db/init.sql
 
-      # - name: Run migrations
-      #   working-directory: backend
-      #   run: go run ./cmd/migrate
-
       - name: Run tests
         working-directory: backend
         run: go test -v ./...
 
-      - name: Install golangci-lint
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-
       - name: Run linter
-        working-directory: backend
-        run: golangci-lint run ./...
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.1.1
+          working-directory: backend
 
       - name: Install gofumpt
         run: go install mvdan.cc/gofumpt@latest
