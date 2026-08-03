@@ -31,7 +31,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
 
       - name: Wait for postgres
         run: |
@@ -47,9 +47,9 @@ jobs:
         run: go test -v ./...
 
       - name: Run linter
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v8
         with:
-          version: v2.1.1
+          version: v2.4.0
           working-directory: backend
 
       - name: Install gofumpt
