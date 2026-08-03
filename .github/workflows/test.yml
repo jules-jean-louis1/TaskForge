@@ -33,8 +33,8 @@ jobs:
         with:
           go-version: '1.25'
 
-      - name: Install golangci-lint
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
+      - name: Install golangci-lint v2
+        run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.4.0
 
       - name: Wait for postgres
         run: |
