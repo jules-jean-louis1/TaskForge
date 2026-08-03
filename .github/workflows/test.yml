@@ -1,0 +1,65 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Wait for postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U testuser; do
+            sleep 2
+          done
+
+      - name: Init database
+        run: psql "$DATABASE_URL" -f db/init.sql
+
+      - name: Run migrations
+        working-directory: backend
+        run: go run ./cmd/migrate
+
+      - name: Run tests
+        working-directory: backend
+        run: go test -v ./...
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+      - name: Run linter
+        working-directory: backend
+        run: golangci-lint run ./...
+
+      - name: Install gofumpt
+        run: go install mvdan.cc/gofumpt@latest
+
+      - name: Run formatter
+        working-directory: backend
+        run: gofumpt -l -w .
