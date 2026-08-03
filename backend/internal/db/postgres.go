@@ -34,3 +34,7 @@ func InitPostgres() {
 func GetDB() *gorm.DB {
 	return instance
 }
+
+func SetDB(db *gorm.DB) {
+	instance = db
+}

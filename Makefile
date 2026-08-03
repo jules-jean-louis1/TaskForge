@@ -88,6 +88,9 @@ launch-prod: # Lance les services Docker en mode production avec docker-compose
 format-back: # Formate le code source du backend avec gofumpt
 	@cd backend && gofumpt -l -w .
 
+test-all: # Exécute les tests unitaires du backend avec go test
+	@cd backend && go test -v ./tests/...
+
 # --- Aide ---
 
 help: # Affiche la liste et la description de toutes les commandes disponibles
