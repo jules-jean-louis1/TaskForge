@@ -24,7 +24,7 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
+      DATABASE_TEST_URL: postgres://testuser:testpass@localhost:5432/testdb
 
     steps:
       - uses: actions/checkout@v4
@@ -40,11 +40,11 @@ jobs:
           done
 
       - name: Init database
-        run: psql "$DATABASE_URL" -f db/init.sql
+        run: psql "$DATABASE_TEST_URL" -f db/init.sql
 
-      - name: Run migrations
-        working-directory: backend
-        run: go run ./cmd/migrate
+      # - name: Run migrations
+      #   working-directory: backend
+      #   run: go run ./cmd/migrate
 
       - name: Run tests
         working-directory: backend
