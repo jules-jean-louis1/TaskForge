@@ -1,0 +1,22 @@
+meta {
+  name: Update User
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/users/{{standard_user_id}}
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "firstname": "Blaze Updated",
+    "lastname": "Stuart Updated",
+    "role": "tech"
+  }
+}

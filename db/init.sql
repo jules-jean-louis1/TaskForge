@@ -75,3 +75,29 @@ ADD FOREIGN KEY ("assigned_by_user_id") REFERENCES "users"("id") ON DELETE SET N
 -- Pour la sécurité : si l'user disparaît, ses accès disparaissent
 ALTER TABLE "refresh_token"
 ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
+
+-- 8. Seed de données de base pour les tests Bruno et l'exploration locale
+INSERT INTO "users" ("id", "firstname", "lastname", "email", "password_hash", "role", "created_at", "updated_at")
+VALUES
+    ('11111111-1111-1111-1111-111111111111', 'Admin', 'Forge', 'admin.admin@example.com', '$2b$12$fNpMBdhPQLh2TZTRvw0uueW8eBmj82qUoD2/OeFw57Q9iZ.dDc97y', 'admin', NOW(), NOW()),
+    ('22222222-2222-2222-2222-222222222222', 'Theo', 'Tech', 'theo.tech@example.com', '$2b$12$XoEPx7YA0HMKxs44PSeH3eeBSZV9k5GNf4ASM0rh7tYlnPyXU2pIO', 'tech', NOW(), NOW()),
+    ('33333333-3333-3333-3333-333333333333', 'Blaze', 'Stuart', 'blaze.stuart@example.com', '$2b$12$B4HBdA59wwlzRAc.SIiAe.X3HmhIyHHopJcFdNQap.bHa2TrwrkXO', 'standard', NOW(), NOW())
+ON CONFLICT DO NOTHING;
+
+INSERT INTO "categories" ("id", "name")
+VALUES
+    (1, 'Support'),
+    (2, 'Infrastructure')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO "tickets" ("id", "title", "description", "status", "priority", "category_id", "created_by", "assigned_to", "created_at", "updated_at", "resolved_at")
+VALUES
+    ('44444444-4444-4444-4444-444444444444', 'VPN access unavailable', 'Impossible de se connecter au VPN depuis le poste de travail.', 'open', 'high', 1, '33333333-3333-3333-3333-333333333333', '22222222-2222-2222-2222-222222222222', NOW(), NOW(), NULL),
+    ('55555555-5555-5555-5555-555555555555', 'Reset printer queue', 'La file d''impression reste bloquée sur plusieurs postes.', 'in_progress', 'mid', 2, '33333333-3333-3333-3333-333333333333', '22222222-2222-2222-2222-222222222222', NOW(), NOW(), NULL)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO "ticket_assignment_history" ("id", "ticket_id", "assigned_to_user_id", "assigned_by_user_id", "assigned_at", "ended_at", "status_at_assignment")
+VALUES
+    (1, '44444444-4444-4444-4444-444444444444', '22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', NOW(), NULL, 'open'),
+    (2, '55555555-5555-5555-5555-555555555555', '22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', NOW(), NULL, 'in_progress')
+ON CONFLICT DO NOTHING;
