@@ -33,6 +33,9 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
+
       - name: Wait for postgres
         run: |
           until pg_isready -h localhost -p 5432 -U testuser; do
@@ -47,10 +50,8 @@ jobs:
         run: go test -v ./...
 
       - name: Run linter
-        uses: golangci/golangci-lint-action@v8
-        with:
-          version: v2.4.0
-          working-directory: backend
+        working-directory: backend
+        run: $(go env GOPATH)/bin/golangci-lint run ./...
 
       - name: Install gofumpt
         run: go install mvdan.cc/gofumpt@latest
