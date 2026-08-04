@@ -47,11 +47,11 @@ func SetupRouter() *gin.Engine {
 
 	apiGroup := router.Group("/api/v1")
 	routes.UserRoutes(apiGroup)
+	routes.TicketRoutes(apiGroup)
 
 	return router
 }
 
-// GenerateTestToken crée un vrai token compatible avec handler.Claims
 func GenerateTestToken(userIDStr string, role string) string {
 	_ = godotenv.Load("../docker/.env")
 	_ = godotenv.Load(".env")
@@ -67,11 +67,17 @@ func GenerateTestToken(userIDStr string, role string) string {
 		userID = uuid.New()
 	}
 
+	var u models.User
+	email := "test@example.com"
+	if err := testDB.First(&u, "id = ?", userID).Error; err == nil {
+		email = u.Email
+	}
+
 	claims := middleware.Claims{
 		ID:        userID.String(),
 		Firstname: "Test",
 		Lastname:  "User",
-		Email:     "test@example.com",
+		Email:     email,
 		Role:      role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),

@@ -6,8 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// --- Énumérations ---
-
 type Role string
 
 const (
@@ -33,8 +31,6 @@ const (
 	PriorityHigh     Priority = "high"
 	PriorityCritical Priority = "critical"
 )
-
-// --- Tables ---
 
 type User struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
@@ -65,7 +61,6 @@ type Ticket struct {
 	UpdatedAt   time.Time
 	ResolvedAt  *time.Time
 
-	// Relations (GORM)
 	Category *Category `gorm:"foreignKey:CategoryID"`
 	Creator  *User     `gorm:"foreignKey:CreatedBy"`
 	Assignee *User     `gorm:"foreignKey:AssignedTo"`
@@ -80,10 +75,13 @@ type TicketAssignmentHistory struct {
 	EndedAt            *time.Time
 	StatusAtAssignment Status `gorm:"type:status"`
 
-	// Relations
 	Ticket         Ticket `gorm:"foreignKey:TicketID"`
 	AssignedToUser *User  `gorm:"foreignKey:AssignedToUserID"`
 	AssignedByUser *User  `gorm:"foreignKey:AssignedByUserID"`
+}
+
+func (TicketAssignmentHistory) TableName() string {
+	return "ticket_assignment_history"
 }
 
 type RefreshToken struct {

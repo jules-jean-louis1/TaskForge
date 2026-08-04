@@ -1,0 +1,13 @@
+meta {
+  name: Get Ticket History
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{base_url}}/tickets/{{ticket_id_tech}}/history
+}
+
+headers {
+  Authorization: Bearer {{token_admin}}
+}

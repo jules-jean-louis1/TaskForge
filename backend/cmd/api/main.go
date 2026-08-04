@@ -27,6 +27,9 @@ func main() {
 	})
 
 	routes.AuthRoutes(api)
+	routes.UserRoutes(api)
+	routes.CategoriesRoutes(api)
+	routes.TicketRoutes(api)
 
 	fmt.Println("Hello, TaskForge!")
 
