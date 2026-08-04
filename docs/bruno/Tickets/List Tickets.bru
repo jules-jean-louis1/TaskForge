@@ -1,0 +1,13 @@
+meta {
+  name: List Tickets
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/tickets?category_id={{category_id}}
+}
+
+headers {
+  Authorization: Bearer {{token_standard}}
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Update Ticket
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{base_url}}/tickets/{{ticket_id_standard}}
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_standard}}
+}
+
+body:json {
+  {
+    "title": "VPN down - updated"
+  }
+}

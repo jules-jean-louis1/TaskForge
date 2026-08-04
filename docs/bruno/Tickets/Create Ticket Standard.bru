@@ -1,0 +1,29 @@
+meta {
+  name: Create Ticket Standard
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/tickets
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_standard}}
+}
+
+body:json {
+  {
+    "title": "VPN down - standard",
+    "description": "Ticket created by a standard user",
+    "priority": "high",
+    "category_id": {{category_id}}
+  }
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setEnvVar("ticket_id_standard", res.body.id);
+  }
+}

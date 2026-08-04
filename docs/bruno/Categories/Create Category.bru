@@ -1,0 +1,26 @@
+meta {
+  name: Create Category
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/categories
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_admin}}
+}
+
+body:json {
+  {
+    "name": "Operations"
+  }
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setEnvVar("category_id_created", res.body.id);
+  }
+}

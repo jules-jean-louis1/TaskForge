@@ -1,0 +1,30 @@
+meta {
+  name: Create Ticket Tech
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/tickets
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_tech}}
+}
+
+body:json {
+  {
+    "title": "VPN down - tech",
+    "description": "Ticket created by a tech user",
+    "priority": "high",
+    "category_id": {{category_id}},
+    "assigned_to": "{{standard_user_id}}"
+  }
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setEnvVar("ticket_id_tech", res.body.id);
+  }
+}

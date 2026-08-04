@@ -1,0 +1,13 @@
+meta {
+  name: Get Category By ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/categories/{{category_id}}
+}
+
+headers {
+  Authorization: Bearer {{token_admin}}
+}

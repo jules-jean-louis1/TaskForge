@@ -1,0 +1,13 @@
+meta {
+  name: Get Ticket By ID
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/tickets/{{ticket_id_standard}}
+}
+
+headers {
+  Authorization: Bearer {{token_standard}}
+}

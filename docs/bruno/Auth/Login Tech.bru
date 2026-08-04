@@ -1,0 +1,24 @@
+meta {
+  name: Login Tech User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "theo.tech@example.com",
+    "password": "Password123!"
+  }
+}
+
+script:post-response {
+  if (res.body.token) {
+    bru.setEnvVar("token_tech", res.body.token);
+  }
+}

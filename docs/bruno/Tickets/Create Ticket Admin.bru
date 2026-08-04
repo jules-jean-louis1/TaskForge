@@ -1,0 +1,30 @@
+meta {
+  name: Create Ticket Admin
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/tickets
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_admin}}
+}
+
+body:json {
+  {
+    "title": "VPN down - admin",
+    "description": "Ticket created by an admin user",
+    "priority": "high",
+    "category_id": {{category_id}},
+    "assigned_to": "{{tech_user_id}}"
+  }
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setEnvVar("ticket_id_admin", res.body.id);
+  }
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Update Category
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/categories/{{category_id}}
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token_admin}}
+}
+
+body:json {
+  {
+    "name": "Support Updated"
+  }
+}
