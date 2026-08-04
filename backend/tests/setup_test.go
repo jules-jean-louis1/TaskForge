@@ -48,6 +48,7 @@ func SetupRouter() *gin.Engine {
 	apiGroup := router.Group("/api/v1")
 	routes.UserRoutes(apiGroup)
 	routes.TicketRoutes(apiGroup)
+	routes.CategoriesRoutes(apiGroup)
 
 	return router
 }
