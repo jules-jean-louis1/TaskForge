@@ -1,0 +1,53 @@
+<div>
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label for="firstname">Prénom</label>
+      <input
+        type="text"
+        class="form-control"
+        id="firstname"
+        [(ngModel)]="firstname"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="lastname">Nom</label>
+      <input
+        type="text"
+        class="form-control"
+        id="lastname"
+        [(ngModel)]="lastname"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        [(ngModel)]="email"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="password">Mot de passe</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        [(ngModel)]="password"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+    </div>
+
+    <button type="submit">S'inscrire</button>
+  </form>
+</div>

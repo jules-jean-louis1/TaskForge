@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  width: 110px;
+  height: 100%;
+}
+
+.sidebar {
+  width: 110px;
+  height: 100%;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.nav-item {
+  width: 100%;
+  padding: 0; /* Pas de padding sur le li */
+}
+
+/* Style de la balise <a> */
+.nav-link {
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Icône en haut, texte en bas */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 84px;
+  padding: 20px 0; /* Padding haut/bas de 20px */
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #64748b;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem; /* 12px pour un look épuré */
+  font-weight: 500;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* L'indicateur vertical à gauche (longueur du bouton) */
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%; /* Prend toute la hauteur (84px) */
+  background: linear-gradient(180deg, #ff4e50 0%, #f92053 50%, #8c1bab 100%);
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Survol (Hover) */
+.nav-link:hover {
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+.nav-link:hover::before {
+  opacity: 0.5; /* Indicateur légèrement visible au survol */
+}
+
+/* ÉTAT ACTIF (quand la route correspond à l'URL) */
+.nav-link.active {
+  color: #f92053; /* Couleur thème Angular active */
+  background-color: #fff1f2; /* Fond très léger rosé */
+  font-weight: 600;
+}
+
+/* Affichage complet de l'indicateur vertical actif */
+.nav-link.active::before {
+  opacity: 1;
+}
+
+/* Couleur des icônes lucide */
+lucide-icon {
+  stroke-width: 2px;
+}

@@ -1,0 +1,15 @@
+<div>
+  @if (isRegisterSuccessful()) {
+    <div class="alert alert-success">
+      Inscriptions réussie ! Vous pouvez maintenant vous connecter.
+    </div>
+  }
+  @if (isLoginMode()) {
+    <app-login-form />
+  } @else {
+    <app-register-form (registerSuccess)="onRegisterSuccess($event)" />
+  }
+  <button (click)="toggleMode()">
+    {{ isLoginMode() ? "S'inscrire" : 'Se connecter' }}
+  </button>
+</div>
