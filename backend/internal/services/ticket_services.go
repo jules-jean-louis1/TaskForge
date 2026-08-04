@@ -140,15 +140,16 @@ func ListTickets(c *gin.Context) {
 }
 
 func GetTicketByID(c *gin.Context) {
-	id := c.Param("id")
 
-	ticket, err := ticketRepo.FindByID(id)
+	ticketID, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{"error": "ticket not found"})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID invalide"})
+		return
+	}
+
+	ticket, err := ticketRepo.FindByID(ticketID.String())
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ticket not found"})
 		return
 	}
 

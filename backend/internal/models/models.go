@@ -80,6 +80,10 @@ type TicketAssignmentHistory struct {
 	AssignedByUser *User  `gorm:"foreignKey:AssignedByUserID"`
 }
 
+func (TicketAssignmentHistory) TableName() string {
+	return "ticket_assignment_history"
+}
+
 type RefreshToken struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement"`
 	UserID    uuid.UUID `gorm:"type:uuid;not null;index"`
