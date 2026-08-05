@@ -1,0 +1,22 @@
+@if (isOpen) {
+  <!-- Backdrop (fond sombre flouté) -->
+  <div class="modal-backdrop" (click)="onClose()">
+    
+    <!-- Conteneur de la pop-up (stopPropagation évite de fermer la modal si on clique à l'intérieur) -->
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      
+      <!-- Header de la Modal -->
+      <div class="modal-header">
+        <h3>{{ title }}</h3>
+        <button class="close-btn" (click)="onClose()">&times;</button>
+      </div>
+
+      <!-- Corps de la Modal : C'est ici que ton contenu HTML dynamique sera injecté ! -->
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
+
+    </div>
+
+  </div>
+}

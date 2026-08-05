@@ -1,18 +1,29 @@
-<div class="form-group">
-  <form (ngSubmit)="onSubmit()">
-    <div>
-      <label for="email">Email</label>
-      <input type="email" name="email" [(ngModel)]="email" required />
-    </div>
-    <div>
-      <label for="password">Mot de passe</label>
-      <input type="password" name="password" [(ngModel)]="password" required />
-    </div>
-    <button type="submit">Se connecter</button>
-  </form>
-  @if (isLoginSuccess) {
-    <div>
-      <p>Connecter</p>
-    </div>
-  }
-</div>
+<form (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      class="form-control"
+      name="email"
+      [(ngModel)]="email"
+      placeholder="nom@exemple.com"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="password">Mot de passe</label>
+    <input
+      type="password"
+      id="password"
+      class="form-control"
+      name="password"
+      [(ngModel)]="password"
+      placeholder="••••••••"
+      required
+    />
+  </div>
+
+  <button type="submit" class="btn-submit">Se connecter</button>
+</form>

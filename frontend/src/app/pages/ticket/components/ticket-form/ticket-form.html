@@ -1,0 +1,47 @@
+<form (ngSubmit)="submitTicket()">
+  <div class="form-group">
+    <label for="title">Titre</label>
+    <input
+      id="title"
+      type="text"
+      [(ngModel)]="ticketData.title"
+      name="title"
+      placeholder="Ex: Bug sur le paiement"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="ticketData.description"
+      required
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="category_id">Catégorie</label>
+    <select id="category" name="category_id" [(ngModel)]="ticketData.category_id">
+      @for (cat of categories; track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="priority">Priorité</label>
+    <select id="priority" [(ngModel)]="ticketData.priority" name="priority">
+      <option value="low">Basse</option>
+      <option value="mid">Moyenne</option>
+      <option value="high">Haute</option>
+      <option value="critical">Critique</option>
+    </select>
+  </div>
+
+  <div
+    class="form-actions"
+    style="margin-top: 1.5rem; display: flex; gap: 0.5rem; justify-content: flex-end"
+  >
+    <button type="button" (click)="closeModal()">Annuler</button>
+    <button type="submit">Valider</button>
+  </div>
+</form>

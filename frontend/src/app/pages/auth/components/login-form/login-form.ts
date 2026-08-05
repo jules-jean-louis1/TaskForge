@@ -13,13 +13,11 @@ import { Router } from '@angular/router';
 })
 export class LoginForm {
   private router = inject(Router);
+  private authService = inject(Auth)
 
   email: string = '';
   password: string = '';
 
-  isLoginSuccess: boolean = false;
-
-  constructor(private authService: Auth) {}
 
   onSubmit() {
     if (!this.email && !this.password) {
@@ -28,7 +26,7 @@ export class LoginForm {
     this.authService.login(this.email, this.password).subscribe({
       next: (res) => {
         if (res.token.length) {
-          this.isLoginSuccess = !this.isLoginSuccess;
+          this.authService.isLogged.set(true)
           setTimeout(() => {
             this.router.navigate(['/']);
           }, 5000);

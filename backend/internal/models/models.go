@@ -6,6 +6,8 @@ import (
 	"github.com/google/uuid"
 )
 
+//go:generate tygo generate
+
 type Role string
 
 const (
@@ -33,51 +35,51 @@ const (
 )
 
 type User struct {
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
-	Firstname    string    `gorm:"size:255"`
-	Lastname     string    `gorm:"size:255"`
-	Email        string    `gorm:"size:255;unique;not null"`
-	PasswordHash string    `gorm:"column:password_hash;not null"`
-	Role         Role      `gorm:"type:role;default:'standard';not null"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	Firstname    string    `gorm:"size:255" json:"firstname"`
+	Lastname     string    `gorm:"size:255" json:"lastname"`
+	Email        string    `gorm:"size:255;unique;not null" json:"email"`
+	PasswordHash string    `gorm:"column:password_hash;not null" json:"-"`
+	Role         Role      `gorm:"type:role;default:'standard';not null" json:"role"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 type Category struct {
-	ID   uint   `gorm:"primaryKey;autoIncrement"`
-	Name string `gorm:"size:255;not null"`
+	ID   uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	Name string `gorm:"size:255;not null" json:"name"`
 }
 
 type Ticket struct {
-	ID          uuid.UUID  `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
-	Title       string     `gorm:"size:255;not null"`
-	Description string     `gorm:"type:text"`
-	Status      Status     `gorm:"type:status;default:'open';not null"`
-	Priority    Priority   `gorm:"type:priority;default:'low';not null"`
-	CategoryID  *uint      `gorm:"index"`
-	CreatedBy   *uuid.UUID `gorm:"type:uuid;index"`
-	AssignedTo  *uuid.UUID `gorm:"type:uuid;index"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	ResolvedAt  *time.Time
+	ID          uuid.UUID  `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	Title       string     `gorm:"size:255;not null" json:"title"`
+	Description string     `gorm:"type:text" json:"description"`
+	Status      Status     `gorm:"type:status;default:'open';not null" json:"status"`
+	Priority    Priority   `gorm:"type:priority;default:'low';not null" json:"priority"`
+	CategoryID  *uint      `gorm:"index" json:"categoryId,omitempty"`
+	CreatedBy   *uuid.UUID `gorm:"type:uuid;index" json:"createdBy,omitempty"`
+	AssignedTo  *uuid.UUID `gorm:"type:uuid;index" json:"assignedTo,omitempty"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
+	ResolvedAt  *time.Time `json:"resolvedAt,omitempty"`
 
-	Category *Category `gorm:"foreignKey:CategoryID"`
-	Creator  *User     `gorm:"foreignKey:CreatedBy"`
-	Assignee *User     `gorm:"foreignKey:AssignedTo"`
+	Category *Category `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
+	Creator  *User     `gorm:"foreignKey:CreatedBy" json:"creator,omitempty"`
+	Assignee *User     `gorm:"foreignKey:AssignedTo" json:"assignee,omitempty"`
 }
 
 type TicketAssignmentHistory struct {
-	ID                 uint       `gorm:"primaryKey;autoIncrement"`
-	TicketID           uuid.UUID  `gorm:"type:uuid;not null;index"`
-	AssignedToUserID   *uuid.UUID `gorm:"type:uuid;index"`
-	AssignedByUserID   *uuid.UUID `gorm:"type:uuid;index"`
-	AssignedAt         time.Time  `gorm:"default:now()"`
-	EndedAt            *time.Time
-	StatusAtAssignment Status `gorm:"type:status"`
+	ID                 uint       `gorm:"primaryKey;autoIncrement" json:"id"`
+	TicketID           uuid.UUID  `gorm:"type:uuid;not null;index" json:"ticketId"`
+	AssignedToUserID   *uuid.UUID `gorm:"type:uuid;index" json:"assignedToUserId,omitempty"`
+	AssignedByUserID   *uuid.UUID `gorm:"type:uuid;index" json:"assignedByUserId,omitempty"`
+	AssignedAt         time.Time  `gorm:"default:now()" json:"assignedAt"`
+	EndedAt            *time.Time `json:"endedAt,omitempty"`
+	StatusAtAssignment Status     `gorm:"type:status" json:"statusAtAssignment"`
 
-	Ticket         Ticket `gorm:"foreignKey:TicketID"`
-	AssignedToUser *User  `gorm:"foreignKey:AssignedToUserID"`
-	AssignedByUser *User  `gorm:"foreignKey:AssignedByUserID"`
+	Ticket         Ticket `gorm:"foreignKey:TicketID" json:"ticket,omitempty"`
+	AssignedToUser *User  `gorm:"foreignKey:AssignedToUserID" json:"assignedToUser,omitempty"`
+	AssignedByUser *User  `gorm:"foreignKey:AssignedByUserID" json:"assignedByUser,omitempty"`
 }
 
 func (TicketAssignmentHistory) TableName() string {
@@ -85,14 +87,14 @@ func (TicketAssignmentHistory) TableName() string {
 }
 
 type RefreshToken struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement"`
-	UserID    uuid.UUID `gorm:"type:uuid;not null;index"`
-	TokenHash string    `gorm:"column:token_hash;not null"`
-	Revoked   bool      `gorm:"default:false"`
-	ExpiresAt time.Time `gorm:"not null"`
-	CreatedAt time.Time
+	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	UserID    uuid.UUID `gorm:"type:uuid;not null;index" json:"userId"`
+	TokenHash string    `gorm:"column:token_hash;not null" json:"-"`
+	Revoked   bool      `gorm:"default:false" json:"revoked"`
+	ExpiresAt time.Time `gorm:"not null" json:"expiresAt"`
+	CreatedAt time.Time `json:"createdAt"`
 
-	User User `gorm:"foreignKey:UserID"`
+	User User `gorm:"foreignKey:UserID" json:"user,omitempty"`
 }
 
 func (RefreshToken) TableName() string {

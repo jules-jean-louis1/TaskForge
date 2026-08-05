@@ -4,11 +4,10 @@
   </div>
 
   <div id="container-login-action" class="actions-container">
-    @if (isLogged) {
-      <button class="btn-angular btn-reset">Profil</button>
+    @if (authService.isAuthenticated()) {
+      <button class="btn-angular btn-reset">{{ authService.currentUser()?.firstname }}</button>
     } @else {
-      <!-- Bouton principal avec la vraie bordure dégradée Angular.dev -->
-      <button class="btn-angular">Se connecter</button>
+      <a routerLink="/auth" class="btn-angular">Se connecter</a>
     }
   </div>
 </header>

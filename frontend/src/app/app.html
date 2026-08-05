@@ -7,3 +7,12 @@
     <router-outlet></router-outlet>
   </main>
 </div>
+
+<!-- Modal réutilisable qui héberge le formulaire -->
+<app-modal
+  [isOpen]="modalService.isTicketModalOpen()"
+  title="Ajouter un Ticket"
+  (close)="modalService.close()"
+>
+  <app-ticket-form></app-ticket-form>
+</app-modal>

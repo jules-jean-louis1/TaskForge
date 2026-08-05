@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ModalService } from '../modal/modal.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,4 +9,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  private modalService = inject(ModalService);
+
+  openTicketModal() {
+    this.modalService.open();
+  } 
+}
