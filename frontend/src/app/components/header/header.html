@@ -1,0 +1,13 @@
+<header class="app-header">
+  <div id="container-search" class="search-container">
+    <!-- Search bar -->
+  </div>
+
+  <div id="container-login-action" class="actions-container">
+    @if (authService.isAuthenticated()) {
+      <button class="btn-angular btn-reset">{{ authService.currentUser()?.firstname }}</button>
+    } @else {
+      <a routerLink="/auth" class="btn-angular">Se connecter</a>
+    }
+  </div>
+</header>

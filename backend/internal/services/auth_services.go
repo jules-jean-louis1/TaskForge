@@ -115,7 +115,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("refreshToken", rawRefreshToken, 30*24*60*60, "/", "", true, true)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "refreshToken",
+		Value:    rawRefreshToken,
+		Path:     "/",
+		MaxAge:   30 * 24 * 60 * 60,
+		Expires:  time.Now().Add(30 * 24 * time.Hour),
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	})
 	c.JSON(http.StatusOK, gin.H{"token": accessToken})
 }
 
@@ -168,6 +177,15 @@ func Refresh(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("refreshToken", newRawRefreshToken, 30*24*60*60, "/", "", true, true)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "refreshToken",
+		Value:    newRawRefreshToken,
+		Path:     "/",
+		MaxAge:   30 * 24 * 60 * 60,
+		Expires:  time.Now().Add(30 * 24 * time.Hour),
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	})
 	c.JSON(http.StatusOK, gin.H{"token": newAccessToken})
 }

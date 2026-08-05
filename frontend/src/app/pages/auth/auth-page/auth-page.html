@@ -1,0 +1,30 @@
+<div class="auth-container">
+  <div class="auth-card">
+    
+    <div class="auth-header">
+      <h2>{{ isLoginMode() ? "Connexion" : "Inscription" }}</h2>
+      <p>Bienvenue sur la plateforme</p>
+    </div>
+
+    @if (isRegisterSuccessful()) {
+      <div class="alert alert-success">
+        Inscription réussie ! Vous pouvez maintenant vous connecter.
+      </div>
+    }
+
+    <!-- Affichage conditionnel des formulaires -->
+    @if (isLoginMode()) {
+      <app-login-form />
+    } @else {
+      <app-register-form (registerSuccess)="onRegisterSuccess($event)" />
+    }
+
+    <div class="auth-footer">
+      <span>{{ isLoginMode() ? "Pas encore de compte ?" : "Déjà un compte ?" }}</span>
+      <button class="btn-toggle" (click)="toggleMode()">
+        {{ isLoginMode() ? "S'inscrire" : 'Se connecter' }}
+      </button>
+    </div>
+
+  </div>
+</div>

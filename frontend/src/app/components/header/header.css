@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.app-header {
+  box-sizing: border-box;
+  max-height: 64px;
+  height: 64px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Définition des variables de couleurs d'Angular.dev */
+:root {
+  --angular-gradient: linear-gradient(90deg, #ff4e50 0%, #f92053 50%, #8c1bab 100%);
+  --btn-bg: #ffffff;
+  --text-color: #0f172a;
+}
+
+/* Base du bouton */
+.btn-angular {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.875rem; /* ~46px comme sur angular.dev */
+  padding: 0 1.5rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-color);
+  background: var(--btn-bg);
+  border: none;
+  border-radius: 0.25rem; /* 4px (border-radius carré très légèrement arrondi) */
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  z-index: 1;
+}
+
+/* L'astuce du contour en dégradé (Gradient Border) */
+.btn-angular::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px; /* Épaisseur de la bordure */
+  border-radius: calc(0.25rem + 1.5px);
+  background: var(--angular-gradient);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+/* Optionnel : Masquer la bordure dégradée pour le bouton "Reset" simple (gris) */
+.btn-angular.btn-reset::before {
+  background: #e2e8f0;
+}
+
+/* Effets au survol (Hover) */
+.btn-angular:hover {
+  opacity: 0.9;
+}
+
+.btn-angular:hover::before {
+  opacity: 1;
+  filter: brightness(1.1);
+}
+
+.btn-angular:active {
+  transform: scale(0.98);
+}
