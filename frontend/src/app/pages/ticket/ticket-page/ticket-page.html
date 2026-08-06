@@ -1,7 +1,11 @@
 @if (ticket(); as currentTicket) {
   <form (ngSubmit)="onSubmit()" class="ticket-page-container">
     <header class="ticket-header">
-      <button class="header-return-button tf-button tf-button--secondary" (click)="ButtonBackTicket()" type="button">
+      <button
+        class="header-return-button tf-button tf-button--secondary"
+        (click)="ButtonBackTicket()"
+        type="button"
+      >
         <span>←</span>
         <span>Retour</span>
       </button>
@@ -25,7 +29,11 @@
           <h1>{{ currentTicket.title }}</h1>
         }
         @if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'tech')) {
-          <button type="button" class="btn-copy-link tf-button tf-button--secondary" (click)="onEdit()">
+          <button
+            type="button"
+            class="btn-copy-link tf-button tf-button--secondary"
+            (click)="onEdit()"
+          >
             <span>✏️</span> {{ isEditMode ? 'Annuler' : 'Éditer' }}
           </button>
         }
@@ -150,20 +158,36 @@
               <hr class="divider" />
 
               <div class="action-buttons">
-                <button type="submit" class="btn-purple tf-button tf-button--primary" [disabled]="isSaving()">
+                <button
+                  type="submit"
+                  class="btn-purple tf-button tf-button--primary"
+                  [disabled]="isSaving()"
+                >
                   {{ isSaving() ? 'Enregistrement...' : 'Enregistrer' }}
                 </button>
 
                 <div class="btn-group-row">
-                  <button type="button" class="btn-outline-purple tf-button tf-button--secondary" (click)="draftStatus.set('in_progress')">
+                  <button
+                    type="button"
+                    class="btn-outline-purple tf-button tf-button--secondary"
+                    (click)="draftStatus.set('in_progress')"
+                  >
                     En cours
                   </button>
-                  <button type="button" class="btn-outline-green tf-button tf-button--secondary" (click)="draftStatus.set('resolved')">
+                  <button
+                    type="button"
+                    class="btn-outline-green tf-button tf-button--secondary"
+                    (click)="draftStatus.set('resolved')"
+                  >
                     Résoudre
                   </button>
                 </div>
 
-                <button type="button" class="btn-outline-gray tf-button tf-button--secondary" (click)="draftStatus.set('closed')">
+                <button
+                  type="button"
+                  class="btn-outline-gray tf-button tf-button--secondary"
+                  (click)="draftStatus.set('closed')"
+                >
                   Fermer
                 </button>
               </div>

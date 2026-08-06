@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "lint": "eslint \"src/app/**/*.{ts,html}\" --max-warnings=0",
+    "lint:fix": "eslint \"src/app/**/*.{ts,html}\" --fix",
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "format": "prettier --write \"src/**/*.{ts,html,css,scss,json,md}\""
   },
   "private": true,
   "packageManager": "npm@10.8.2",
@@ -38,6 +41,13 @@
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "@angular-eslint/builder": "^16.3.0",
+    "@angular-eslint/eslint-plugin": "^16.3.0",
+    "@angular-eslint/eslint-plugin-template": "^16.3.0",
+    "@angular-eslint/template-parser": "^16.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.57.0"
   }
 }

@@ -10,13 +10,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(Auth);
   const router = inject(Router);
 
-  if (req.url.includes('/auth/login') || req.url.includes('/auth/register') || req.url.includes('/auth/refresh')) {
+  if (
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/register') ||
+    req.url.includes('/auth/refresh')
+  ) {
     return next(req);
   }
 
-  // Prevent multiple simultaneous refresh calls which would revoke the same token
-  // and cause "Refresh token invalide" for concurrent requests.
-  // Shared state at module level is acceptable here since interceptor is singleton.
   if ((authInterceptor as any)._isInitialized !== true) {
     (authInterceptor as any)._isRefreshing = false;
     (authInterceptor as any)._refreshSubject = new BehaviorSubject<string | null>(null);
@@ -40,7 +41,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
-      // If a refresh is already in progress, wait for it to complete and retry
       if ((authInterceptor as any)._isRefreshing) {
         return refreshSubject.pipe(
           filter((token) => token != null),
@@ -50,11 +50,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               setHeaders: { Authorization: `Bearer ${token}` },
             });
             return next(newReq);
-          })
+          }),
         );
       }
 
-      // No refresh in progress -> start one
       (authInterceptor as any)._isRefreshing = true;
       refreshSubject.next(null);
 
@@ -73,8 +72,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           authService.logout();
           router.navigate(['/auth']);
           return throwError(() => refreshErr);
-        })
+        }),
       );
-    })
+    }),
   );
 };

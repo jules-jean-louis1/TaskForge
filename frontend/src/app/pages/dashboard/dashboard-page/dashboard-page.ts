@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TicketService } from '../../../core/services/ticket-service';
 import { UserService } from '../../../core/services/user-service';
 import { Ticket, User } from '../../../core/models/models';
@@ -11,7 +11,7 @@ import { Ticket, User } from '../../../core/models/models';
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
   private ticketService = inject(TicketService);
   private userService = inject(UserService);
 
@@ -47,11 +47,15 @@ export class DashboardPage {
   }
 
   get openCount() {
-    return this.tickets().filter((ticket) => ticket.status === 'open' || ticket.status === 'in_progress').length;
+    return this.tickets().filter(
+      (ticket) => ticket.status === 'open' || ticket.status === 'in_progress',
+    ).length;
   }
 
   get resolvedCount() {
-    return this.tickets().filter((ticket) => ticket.status === 'resolved' || ticket.status === 'closed').length;
+    return this.tickets().filter(
+      (ticket) => ticket.status === 'resolved' || ticket.status === 'closed',
+    ).length;
   }
 
   get averageResolutionHours() {
@@ -71,10 +75,22 @@ export class DashboardPage {
 
   get priorityStats() {
     return [
-      { label: 'Basse', value: this.tickets().filter((ticket) => ticket.priority === 'low').length },
-      { label: 'Moyenne', value: this.tickets().filter((ticket) => ticket.priority === 'mid').length },
-      { label: 'Haute', value: this.tickets().filter((ticket) => ticket.priority === 'high').length },
-      { label: 'Critique', value: this.tickets().filter((ticket) => ticket.priority === 'critical').length },
+      {
+        label: 'Basse',
+        value: this.tickets().filter((ticket) => ticket.priority === 'low').length,
+      },
+      {
+        label: 'Moyenne',
+        value: this.tickets().filter((ticket) => ticket.priority === 'mid').length,
+      },
+      {
+        label: 'Haute',
+        value: this.tickets().filter((ticket) => ticket.priority === 'high').length,
+      },
+      {
+        label: 'Critique',
+        value: this.tickets().filter((ticket) => ticket.priority === 'critical').length,
+      },
     ];
   }
 }

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
-import { map, tap } from 'rxjs';
 import { Category } from '../models/models';
 
 @Injectable({

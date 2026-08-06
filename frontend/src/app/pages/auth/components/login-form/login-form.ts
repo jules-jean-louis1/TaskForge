@@ -17,7 +17,6 @@ export class LoginForm {
   email: string = '';
   password: string = '';
 
-
   onSubmit() {
     if (!this.email || !this.password) {
       return;
@@ -25,7 +24,7 @@ export class LoginForm {
     this.authService.login(this.email, this.password).subscribe({
       next: (res) => {
         if (res.token.length) {
-          this.authService.isLogged.set(true)
+          this.authService.isLogged.set(true);
           setTimeout(() => {
             this.router.navigate(['/']);
           }, 300);
