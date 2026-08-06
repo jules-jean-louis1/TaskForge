@@ -1,9 +1,10 @@
 package repositories
 
 import (
+	"strings"
+
 	"cmd/api/internal/db"
 	"cmd/api/internal/models"
-	"strings"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

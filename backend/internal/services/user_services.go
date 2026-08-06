@@ -1,9 +1,10 @@
 package services
 
 import (
+	"net/http"
+
 	"cmd/api/internal/middleware"
 	"cmd/api/internal/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

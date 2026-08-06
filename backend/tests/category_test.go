@@ -1,11 +1,12 @@
 package tests
 
 import (
-	"cmd/api/internal/models"
 	"encoding/json"
 	"net/http"
 	"strconv"
 	"testing"
+
+	"cmd/api/internal/models"
 )
 
 func TestCategoriesApi(t *testing.T) {

@@ -143,7 +143,6 @@ func ListTickets(c *gin.Context) {
 }
 
 func GetTicketByID(c *gin.Context) {
-
 	ticketID, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID invalide"})
