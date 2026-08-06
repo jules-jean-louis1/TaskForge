@@ -1,9 +1,10 @@
 package repositories
 
 import (
+	"strings"
+
 	"cmd/api/internal/db"
 	"cmd/api/internal/models"
-	"strings"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -23,9 +24,15 @@ func (r *TicketsRepository) Create(ticket *models.Ticket) error {
 	return r.DB().Create(ticket).Error
 }
 
+func (r *TicketsRepository) Count() (int64, error) {
+	var total int64
+	err := r.DB().Model(&models.Ticket{}).Count(&total).Error
+	return total, err
+}
+
 func (r *TicketsRepository) FindByID(id string) (*models.Ticket, error) {
 	var ticket models.Ticket
-	err := r.DB().First(&ticket, "id = ?", id).Error
+	err := r.DB().Preload("Assignee").Preload("Creator").Preload("Category").First(&ticket, "id = ?", id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +49,7 @@ func (r *TicketsRepository) Delete(id string) error {
 
 func (r *TicketsRepository) FindAll(priority string, status string, categoryID int, createdBy string, assignedTo string, search string, sort string, order string) ([]models.Ticket, error) {
 	var tickets []models.Ticket
-	query := r.DB().Model(&models.Ticket{})
+	query := r.DB().Model(&models.Ticket{}).Preload("Assignee").Preload("Creator")
 
 	if priority != "" {
 		query = query.Where("priority = ?", priority)

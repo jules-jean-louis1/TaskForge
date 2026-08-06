@@ -19,7 +19,11 @@ type Claims struct {
 }
 
 func AuthMiddleware(allowedRoles ...string) gin.HandlerFunc {
-	secret := []byte(os.Getenv("JWT_SECRET"))
+	secretValue := os.Getenv("JWT_SECRET")
+	if secretValue == "" {
+		secretValue = "development-secret"
+	}
+	secret := []byte(secretValue)
 
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

@@ -1,13 +1,27 @@
 <header class="app-header">
   <div id="container-search" class="search-container">
-    <!-- Search bar -->
+    <form class="search-form" (ngSubmit)="search()">
+      <input
+        type="search"
+        class="search-input"
+        placeholder="Rechercher un ticket"
+        [(ngModel)]="searchTerm"
+        name="search"
+      />
+      <button type="submit" class="search-button">Rechercher</button>
+    </form>
   </div>
 
   <div id="container-login-action" class="actions-container">
     @if (authService.isAuthenticated()) {
-      <button class="btn-angular btn-reset">{{ authService.currentUser()?.firstname }}</button>
+      <button class="btn-angular tf-button tf-button--secondary btn-reset">
+        {{ authService.currentUser()?.firstname }}
+      </button>
+      <button class="btn-loggout tf-button tf-button--secondary" (click)="authService.logout()">
+        Deconnexion
+      </button>
     } @else {
-      <a routerLink="/auth" class="btn-angular">Se connecter</a>
+      <a routerLink="/auth" class="btn-angular tf-button tf-button--primary">Se connecter</a>
     }
   </div>
 </header>

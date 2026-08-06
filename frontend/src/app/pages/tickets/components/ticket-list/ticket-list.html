@@ -1,0 +1,78 @@
+<div class="table-header">
+  <h2>Liste des Tickets</h2>
+  <button class="btn-refresh" (click)="refresh()">Rafraîchir</button>
+</div>
+
+<div class="table-container">
+  <table class="tickets-table">
+    <thead>
+      <tr>
+        <th>Titre & Description</th>
+        <th>Statut</th>
+        <th>Priorité</th>
+        <th>Créé par</th>
+        <th>Assigné à</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Appel du Signal avec tickets() -->
+      @for (ticket of tickets(); track ticket.id) {
+        <tr>
+            <td class="cell-main">
+              <span class="ticket-title">{{ ticket.title }}</span>
+              <span class="ticket-desc" [title]="ticket.description">
+                {{ ticket.description }}
+              </span>
+            </td>
+
+            <td>
+              <span class="badge status" [attr.data-status]="ticket.status">
+                {{ ticket.status }}
+              </span>
+            </td>
+
+            <td>
+              <span class="badge priority" [attr.data-priority]="ticket.priority">
+                {{ ticket.priority }}
+              </span>
+            </td>
+
+            <td>
+              <div class="user-info">
+                <span class="user-name"
+                  >{{ ticket.creator?.firstname }} {{ ticket.creator?.lastname }}</span
+                >
+                <span class="user-email">{{ ticket.creator?.email }}</span>
+              </div>
+            </td>
+
+            <td>
+              @if (ticket.assignee) {
+                <div class="user-info">
+                  <span class="user-name"
+                    >{{ ticket.assignee.firstname }} {{ ticket.assignee.lastname }}</span
+                  >
+                  <span class="user-role">{{ ticket.assignee.role }}</span>
+                </div>
+              } @else {
+                <span class="unassigned">— Unassigned</span>
+              }
+            </td>
+
+            <td class="date-cell">
+              {{ ticket.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td class="action-cell">
+              <button (click)="navigateToTicket(ticket.id)">Voir</button>
+            </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-state">Aucun ticket trouvé.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

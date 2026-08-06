@@ -1,0 +1,52 @@
+<section class="users-shell">
+  <header class="users-header">
+    <div>
+      <p class="eyebrow">Administration</p>
+      <h1>Gestion des utilisateurs</h1>
+    </div>
+  </header>
+
+  <div class="users-grid">
+    <article class="panel-card">
+      <h2>{{ editingId() ? 'Modifier l’utilisateur' : 'Créer un utilisateur' }}</h2>
+      <form class="user-form" (ngSubmit)="submit()">
+        <input class="tf-input" name="firstname" [(ngModel)]="form().firstname" placeholder="Prénom" />
+        <input class="tf-input" name="lastname" [(ngModel)]="form().lastname" placeholder="Nom" />
+        <input class="tf-input" name="email" [(ngModel)]="form().email" placeholder="Email" />
+        <input class="tf-input" name="password" type="password" [(ngModel)]="form().password" placeholder="Mot de passe" />
+        <select class="tf-select" name="role" [(ngModel)]="form().role">
+          <option value="standard">Standard</option>
+          <option value="tech">Technicien</option>
+          <option value="admin">Admin</option>
+        </select>
+        <div class="form-actions">
+          <button class="tf-button tf-button--primary" type="submit">Enregistrer</button>
+          <button class="tf-button tf-button--secondary" type="button" (click)="resetForm()">Annuler</button>
+        </div>
+      </form>
+    </article>
+
+    <article class="panel-card">
+      <h2>Utilisateurs</h2>
+      @if (loading()) {
+        <p>Chargement…</p>
+      } @else {
+        <div class="user-list">
+          @for (user of users(); track user.id) {
+            <div class="user-item">
+              <div>
+                <strong>{{ user.firstname }} {{ user.lastname }}</strong>
+                <p>{{ user.email }}</p>
+              </div>
+              <div class="user-actions">
+                <span class="role-badge">{{ user.role }}</span>
+                <button class="tf-button tf-button--secondary" type="button" (click)="edit(user)">Éditer</button>
+                <button class="tf-button tf-button--secondary" type="button" (click)="deleteUser(user.id)">Supprimer</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </article>
+  </div>
+</section>

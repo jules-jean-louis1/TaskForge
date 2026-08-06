@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, inject, Inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '../../services/config.service';
 import { tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { USER_ROLE } from '../../utils/utils';
+import { Router } from '@angular/router';
 
 interface JWTPayload {
   id: string;
@@ -19,6 +21,7 @@ interface JWTPayload {
   providedIn: 'root',
 })
 export class Auth {
+  private router = inject(Router);
   constructor(
     private http: HttpClient,
     private config: ConfigService,
@@ -29,7 +32,7 @@ export class Auth {
 
   isAuthenticated = computed(() => this.currentUser() !== null);
   userRole = computed(() => this.currentUser()?.role ?? null);
-  isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
+  isAdmin = computed(() => this.currentUser()?.role === USER_ROLE.ADMIN);
 
   login(email: string, password: string) {
     return this.http
@@ -42,12 +45,15 @@ export class Auth {
   }
 
   register(firstname: string, lastname: string, email: string, password: string) {
-    return this.http.post(`${this.config.apiUrl}/auth/register`, {
-      firstname,
-      lastname,
-      email,
-      password,
-    });
+    return this.http.post(`${this.config.apiUrl}/auth/register`,
+      {
+        firstname,
+        lastname,
+        email,
+        password,
+      },
+      { observe: 'response' },
+    );
   }
 
   getRefreshToken() {
@@ -64,6 +70,7 @@ export class Auth {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
       this.currentUser.set(null);
+      this.router.navigate(['/']);
     }
   }
 
@@ -90,9 +97,8 @@ export class Auth {
     }
   }
 
-  // Utilitaire privé exécuté uniquement au démarrage
   private getDecodedTokenFromStorage(): JWTPayload | null {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     if (!token) return null;
     return this.decodeToken(token);
   }

@@ -1,0 +1,59 @@
+<form (ngSubmit)="submitTicket()">
+  <div class="form-group">
+    <label for="title">Titre</label>
+    <input
+      id="title"
+      type="text"
+      class="tf-input"
+      [(ngModel)]="ticketData.title"
+      name="title"
+      placeholder="Ex: Bug sur le paiement"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      class="tf-textarea"
+      name="description"
+      [(ngModel)]="ticketData.description"
+      required
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="category_id">Catégorie</label>
+    <select id="category" class="tf-select" name="category_id" [(ngModel)]="ticketData.category_id">
+      <option [ngValue]="undefined" disabled selected>-- Choisir une catégorie --</option>
+      @for (cat of categories; track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="priority">Priorité</label>
+    <select id="priority" class="tf-select" [(ngModel)]="ticketData.priority" name="priority">
+      <option value="low">Basse</option>
+      <option value="mid">Moyenne</option>
+      <option value="high">Haute</option>
+      <option value="critical">Critique</option>
+    </select>
+  </div>
+
+  @if (authService.currentUser()?.role === 'admin' || authService.currentUser()?.role === 'tech') {
+    <div class="form-group">
+      <label for="assigned_to">Assigner à</label>
+      <select id="assigned_to" class="tf-select" name="assigned_to" [(ngModel)]="ticketData.assigned_to">
+        <option value="">-- Pas d’assignation --</option>
+        @for (user of users; track user.id) {
+          <option [value]="user.id">{{ user.firstname }} {{ user.lastname }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <div class="form-actions">
+    <button type="button" class="tf-button tf-button--secondary" (click)="closeModal()">Annuler</button>
+    <button type="submit" class="tf-button tf-button--primary">Valider</button>
+  </div>
+</form>

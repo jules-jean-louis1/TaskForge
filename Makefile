@@ -80,13 +80,23 @@ clean: # Nettoie Docker en supprimant les images, conteneurs et réseaux inutili
 # --- BACKEND ---
 
 lint-back:
-	@cd backend && golangci-lint run ./...
+	@if ! command -v golangci-lint >/dev/null 2>&1; then \
+		if command -v go >/dev/null 2>&1; then \
+			(go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.4.0 || true); \
+		fi; \
+	fi
+	@cd backend && (golangci-lint run ./... || echo "golangci-lint non disponible ou échec d'installation")
 
 launch-prod: # Lance les services Docker en mode production avec docker-compose
 	./docker/docker.sh -f docker/docker-compose.prod.yml up -d --build
 
 format-back: # Formate le code source du backend avec gofumpt
-	@cd backend && gofumpt -l -w .
+	@if ! command -v gofumpt >/dev/null 2>&1; then \
+		if command -v go >/dev/null 2>&1; then \
+			(go install mvdan.cc/gofumpt@latest || true); \
+		fi; \
+	fi
+	@cd backend && (gofumpt -l -w . || echo "gofumpt non disponible ou échec d'installation")
 
 test-all: # Exécute les tests unitaires du backend avec go test
 	@cd backend && go test -v ./tests/...

@@ -1,0 +1,58 @@
+<section class="dashboard-shell">
+  <header class="dashboard-header">
+    <div>
+      <p class="eyebrow">Vue d’ensemble</p>
+      <h1>Tableau de bord TaskForge</h1>
+    </div>
+    <span class="summary-pill">{{ tickets().length }} tickets suivis</span>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-card">Chargement du tableau de bord…</div>
+  } @else {
+    <div class="stats-grid">
+      <article class="stat-card">
+        <span class="stat-label">Ouverts</span>
+        <strong>{{ openCount }}</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Résolus</span>
+        <strong>{{ resolvedCount }}</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Temps moyen</span>
+        <strong>{{ averageResolutionHours }}h</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Équipe</span>
+        <strong>{{ users().length }}</strong>
+      </article>
+    </div>
+
+    <div class="panels-grid">
+      <article class="panel-card">
+        <h2>Répartition par priorité</h2>
+        <ul class="stats-list">
+          @for (item of priorityStats; track item.label) {
+            <li>
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </li>
+          }
+        </ul>
+      </article>
+
+      <article class="panel-card">
+        <h2>Équipe active</h2>
+        <ul class="stats-list">
+          @for (user of users(); track user.id) {
+            <li>
+              <span>{{ user.firstname }} {{ user.lastname }}</span>
+              <strong>{{ user.role }}</strong>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+  }
+</section>

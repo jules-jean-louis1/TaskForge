@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../core/auth/auth';
 
@@ -22,8 +22,7 @@ export class RegisterForm {
   onSubmit() {
     if (!this.email || !this.email.length) return;
     this.authService.register(this.firstname, this.lastname, this.email, this.password).subscribe({
-      next: (res: any) => {
-        console.log('Register', res.message);
+      next: (res) => {
         if (res.status === 201) {
           this.registerSuccess.emit(true);
         }

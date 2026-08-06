@@ -4,7 +4,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -19,13 +19,12 @@ export function initConfig(configService: ConfigService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAppInitializer(() => {
       const configService = inject(ConfigService);
       return configService.loadConfig();
     }),
-    // Icons are used as standalone components (e.g. LucideTicket) in components' imports
   ],
 };
