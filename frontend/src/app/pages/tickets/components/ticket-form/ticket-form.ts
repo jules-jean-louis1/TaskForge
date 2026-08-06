@@ -22,7 +22,7 @@ export class TicketForm implements OnInit {
   private _ticketService = inject(TicketService);
   private _CategoryService = inject(CategoryService);
   private _userService = inject(UserService);
-  private authService = inject(Auth);
+  authService = inject(Auth);
 
   ticketData = {
     title: '',

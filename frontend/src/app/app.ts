@@ -16,6 +16,5 @@ import { ModalService } from './components/modal/modal.service';
 export class App {
   protected readonly title = signal('frontend');
   
-  // Correction de l'injection ici !
   public modalService = inject(ModalService);
 }

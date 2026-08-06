@@ -98,10 +98,6 @@ export class Auth {
   }
 
   private getDecodedTokenFromStorage(): JWTPayload | null {
-    if (!isPlatformBrowser(this.platformId)) {
-      return null;
-    }
-
     const token = localStorage.getItem('token');
     if (!token) return null;
     return this.decodeToken(token);

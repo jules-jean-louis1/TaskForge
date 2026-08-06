@@ -18,7 +18,11 @@ type Claims struct {
 }
 
 func GenerateAccesToken(id uuid.UUID, firstname string, lastname string, email string, role string) (string, error) {
-	secret := []byte(os.Getenv("JWT_SECRET"))
+	secretValue := os.Getenv("JWT_SECRET")
+	if secretValue == "" {
+		secretValue = "development-secret"
+	}
+	secret := []byte(secretValue)
 
 	claims := Claims{
 		ID:        id,

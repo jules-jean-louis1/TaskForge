@@ -15,6 +15,40 @@
   border-bottom: 1px solid rgba(148, 163, 184, 0.18)  ;
 }
 
+.search-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: min(520px, 100%);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  font: inherit;
+  background: #fff;
+}
+
+.search-button {
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  background: #1b57db;
+  color: #fff;
+  cursor: pointer;
+}
+
 .actions-container {
   display: flex;
   align-items: center;

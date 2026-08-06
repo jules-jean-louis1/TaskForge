@@ -1,6 +1,15 @@
 <header class="app-header">
   <div id="container-search" class="search-container">
-    <!-- Search bar -->
+    <form class="search-form" (ngSubmit)="search()">
+      <input
+        type="search"
+        class="search-input"
+        placeholder="Rechercher un ticket"
+        [(ngModel)]="searchTerm"
+        name="search"
+      />
+      <button type="submit" class="search-button">Rechercher</button>
+    </form>
   </div>
 
   <div id="container-login-action" class="actions-container">

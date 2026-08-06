@@ -19,17 +19,14 @@ func main() {
 	db.InitPostgres()
 
 	router := gin.New()
+	router.RedirectTrailingSlash = false
+	router.RedirectFixedPath = false
 	router.Use(gin.Recovery())
 	router.Use(observability.RequestMiddleware())
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"https://app.localhost",
-			"http://app.localhost",
-			"http://localhost:4200",
-			"https://localhost:4200",
-			"http://127.0.0.1:4200",
-			"https://127.0.0.1:4200",
 		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
