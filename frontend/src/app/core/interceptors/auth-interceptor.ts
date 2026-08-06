@@ -10,7 +10,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(Auth);
   const router = inject(Router);
 
-  if (req.url.includes('/auth/login') || req.url.includes('/auth/register') || req.url.includes('/auth/refresh')) {
+  if (
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/register') ||
+    req.url.includes('/auth/refresh')
+  ) {
     return next(req);
   }
 
@@ -46,7 +50,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               setHeaders: { Authorization: `Bearer ${token}` },
             });
             return next(newReq);
-          })
+          }),
         );
       }
 
@@ -68,8 +72,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           authService.logout();
           router.navigate(['/auth']);
           return throwError(() => refreshErr);
-        })
+        }),
       );
-    })
+    }),
   );
 };

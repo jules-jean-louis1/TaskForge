@@ -47,11 +47,15 @@ export class DashboardPage implements OnInit {
   }
 
   get openCount() {
-    return this.tickets().filter((ticket) => ticket.status === 'open' || ticket.status === 'in_progress').length;
+    return this.tickets().filter(
+      (ticket) => ticket.status === 'open' || ticket.status === 'in_progress',
+    ).length;
   }
 
   get resolvedCount() {
-    return this.tickets().filter((ticket) => ticket.status === 'resolved' || ticket.status === 'closed').length;
+    return this.tickets().filter(
+      (ticket) => ticket.status === 'resolved' || ticket.status === 'closed',
+    ).length;
   }
 
   get averageResolutionHours() {
@@ -71,10 +75,22 @@ export class DashboardPage implements OnInit {
 
   get priorityStats() {
     return [
-      { label: 'Basse', value: this.tickets().filter((ticket) => ticket.priority === 'low').length },
-      { label: 'Moyenne', value: this.tickets().filter((ticket) => ticket.priority === 'mid').length },
-      { label: 'Haute', value: this.tickets().filter((ticket) => ticket.priority === 'high').length },
-      { label: 'Critique', value: this.tickets().filter((ticket) => ticket.priority === 'critical').length },
+      {
+        label: 'Basse',
+        value: this.tickets().filter((ticket) => ticket.priority === 'low').length,
+      },
+      {
+        label: 'Moyenne',
+        value: this.tickets().filter((ticket) => ticket.priority === 'mid').length,
+      },
+      {
+        label: 'Haute',
+        value: this.tickets().filter((ticket) => ticket.priority === 'high').length,
+      },
+      {
+        label: 'Critique',
+        value: this.tickets().filter((ticket) => ticket.priority === 'critical').length,
+      },
     ];
   }
 }

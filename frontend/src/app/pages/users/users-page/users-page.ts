@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserService, CreateUserPayload, UpdateUserPayload } from '../../../core/services/user-service';
+import {
+  UserService,
+  CreateUserPayload,
+  UpdateUserPayload,
+} from '../../../core/services/user-service';
 import { User } from '../../../core/models/models';
 
 @Component({

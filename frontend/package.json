@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "eslint \"src/app/**/*.{ts,html}\" --max-warnings=0",
     "lint:fix": "eslint \"src/app/**/*.{ts,html}\" --fix",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "format": "prettier --write \"src/**/*.{ts,html,css,scss,json,md}\""
   },
   "private": true,
   "packageManager": "npm@10.8.2",

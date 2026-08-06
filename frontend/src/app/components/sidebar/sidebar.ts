@@ -12,9 +12,9 @@ import { Auth } from '../../core/auth/auth';
 })
 export class SidebarComponent {
   private modalService = inject(ModalService);
-  authService = inject(Auth)
+  authService = inject(Auth);
 
   openTicketModal() {
     this.modalService.open();
-  } 
+  }
 }

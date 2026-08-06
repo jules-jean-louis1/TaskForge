@@ -20,53 +20,53 @@
       <!-- Appel du Signal avec tickets() -->
       @for (ticket of tickets(); track ticket.id) {
         <tr>
-            <td class="cell-main">
-              <span class="ticket-title">{{ ticket.title }}</span>
-              <span class="ticket-desc" [title]="ticket.description">
-                {{ ticket.description }}
-              </span>
-            </td>
+          <td class="cell-main">
+            <span class="ticket-title">{{ ticket.title }}</span>
+            <span class="ticket-desc" [title]="ticket.description">
+              {{ ticket.description }}
+            </span>
+          </td>
 
-            <td>
-              <span class="badge status" [attr.data-status]="ticket.status">
-                {{ ticket.status }}
-              </span>
-            </td>
+          <td>
+            <span class="badge status" [attr.data-status]="ticket.status">
+              {{ ticket.status }}
+            </span>
+          </td>
 
-            <td>
-              <span class="badge priority" [attr.data-priority]="ticket.priority">
-                {{ ticket.priority }}
-              </span>
-            </td>
+          <td>
+            <span class="badge priority" [attr.data-priority]="ticket.priority">
+              {{ ticket.priority }}
+            </span>
+          </td>
 
-            <td>
+          <td>
+            <div class="user-info">
+              <span class="user-name"
+                >{{ ticket.creator?.firstname }} {{ ticket.creator?.lastname }}</span
+              >
+              <span class="user-email">{{ ticket.creator?.email }}</span>
+            </div>
+          </td>
+
+          <td>
+            @if (ticket.assignee) {
               <div class="user-info">
                 <span class="user-name"
-                  >{{ ticket.creator?.firstname }} {{ ticket.creator?.lastname }}</span
+                  >{{ ticket.assignee.firstname }} {{ ticket.assignee.lastname }}</span
                 >
-                <span class="user-email">{{ ticket.creator?.email }}</span>
+                <span class="user-role">{{ ticket.assignee.role }}</span>
               </div>
-            </td>
+            } @else {
+              <span class="unassigned">— Unassigned</span>
+            }
+          </td>
 
-            <td>
-              @if (ticket.assignee) {
-                <div class="user-info">
-                  <span class="user-name"
-                    >{{ ticket.assignee.firstname }} {{ ticket.assignee.lastname }}</span
-                  >
-                  <span class="user-role">{{ ticket.assignee.role }}</span>
-                </div>
-              } @else {
-                <span class="unassigned">— Unassigned</span>
-              }
-            </td>
-
-            <td class="date-cell">
-              {{ ticket.createdAt | date: 'dd/MM/yyyy HH:mm' }}
-            </td>
-            <td class="action-cell">
-              <button (click)="navigateToTicket(ticket.id)">Voir</button>
-            </td>
+          <td class="date-cell">
+            {{ ticket.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+          <td class="action-cell">
+            <button (click)="navigateToTicket(ticket.id)">Voir</button>
+          </td>
         </tr>
       } @empty {
         <tr>

@@ -1,10 +1,62 @@
-.users-shell { display: flex; flex-direction: column; gap: 1.25rem; }
-.users-header { display: flex; justify-content: space-between; align-items: center; }
-.eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .8rem; color: #8b5cf6; font-weight: 700; margin: 0 0 .3rem; }
-.users-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
-.panel-card { background: #fff; border: 1px solid #ece7ff; border-radius: 18px; padding: 1rem 1.2rem; box-shadow: 0 10px 30px rgba(109, 40, 217, 0.06); }
-.user-form { display: flex; flex-direction: column; gap: .75rem; }
-.user-list { display: flex; flex-direction: column; gap: .75rem; }
-.user-item { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid #f3f4f6; }
-.user-actions { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
-.role-badge { background: #f5f3ff; color: #6d28d9; padding: .25rem .6rem; border-radius: 999px; font-weight: 600; text-transform: capitalize; }
+.users-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: #8b5cf6;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.panel-card {
+  background: #fff;
+  border: 1px solid #ece7ff;
+  border-radius: 18px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.06);
+}
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.role-badge {
+  background: #f5f3ff;
+  color: #6d28d9;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: capitalize;
+}

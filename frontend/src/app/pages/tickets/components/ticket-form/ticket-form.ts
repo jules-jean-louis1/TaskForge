@@ -49,7 +49,9 @@ export class TicketForm implements OnInit {
   }
 
   submitTicket() {
-    const canAssign = this.authService.currentUser()?.role === 'admin' || this.authService.currentUser()?.role === 'tech';
+    const canAssign =
+      this.authService.currentUser()?.role === 'admin' ||
+      this.authService.currentUser()?.role === 'tech';
     const assignedTo = canAssign ? this.ticketData.assigned_to : '';
 
     this._ticketService

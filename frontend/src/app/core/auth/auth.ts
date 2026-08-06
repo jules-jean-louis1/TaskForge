@@ -45,7 +45,8 @@ export class Auth {
   }
 
   register(firstname: string, lastname: string, email: string, password: string) {
-    return this.http.post(`${this.config.apiUrl}/auth/register`,
+    return this.http.post(
+      `${this.config.apiUrl}/auth/register`,
       {
         firstname,
         lastname,

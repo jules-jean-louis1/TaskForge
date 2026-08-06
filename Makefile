@@ -113,6 +113,9 @@ lint-front-fix: # Exécute ESLint et corrige automatiquement les problèmes dét
 install-front: # Installe les dépendances du frontend avec npm
 	@cd frontend && npm install
 
+format-front: # Formate le code source du frontend avec Prettier
+	@cd frontend && npm run format
+
 # --- Aide ---
 
 help: # Affiche la liste et la description de toutes les commandes disponibles

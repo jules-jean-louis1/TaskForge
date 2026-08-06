@@ -1,4 +1,3 @@
 import { ServerRoute } from '@angular/ssr';
 
-export const serverRoutes: ServerRoute[] = [
-];
+export const serverRoutes: ServerRoute[] = [];

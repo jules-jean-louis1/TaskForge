@@ -44,7 +44,9 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem; /* 12px pour un look épuré */
   font-weight: 500;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 /* L'indicateur vertical à gauche (longueur du bouton) */
