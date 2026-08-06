@@ -4,8 +4,10 @@
     <input
       type="text"
       id="firstname"
+      class="form-control tf-input"
       name="firstname"
       [(ngModel)]="firstname"
+      placeholder="Jean"
       required
     />
   </div>
@@ -15,8 +17,10 @@
     <input
       type="text"
       id="lastname"
+      class="form-control tf-input"
       name="lastname"
       [(ngModel)]="lastname"
+      placeholder="Dupont"
       required
     />
   </div>
@@ -26,8 +30,10 @@
     <input
       type="email"
       id="register-email"
+      class="form-control tf-input"
       name="email"
       [(ngModel)]="email"
+      placeholder="nom@exemple.com"
       required
     />
   </div>
@@ -37,11 +43,13 @@
     <input
       type="password"
       id="register-password"
+      class="form-control tf-input"
       name="password"
       [(ngModel)]="password"
+      placeholder="Au moins 8 caractères"
       required
     />
   </div>
 
-  <button type="submit">S'inscrire</button>
+  <button type="submit" class="btn-submit tf-button tf-button--primary">S'inscrire</button>
 </form>

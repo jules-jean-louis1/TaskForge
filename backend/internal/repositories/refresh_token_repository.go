@@ -44,6 +44,15 @@ func (r *RefreshTokenRepository) Create(refreshToken *models.RefreshToken) error
 	return r.DB().Create(refreshToken).Error
 }
 
+func (r *RefreshTokenRepository) CountActiveUsers() (int64, error) {
+	var total int64
+	err := r.DB().Model(&models.RefreshToken{}).
+		Distinct("user_id").
+		Where("revoked = ? AND expires_at > now()", false).
+		Count(&total).Error
+	return total, err
+}
+
 func (r *RefreshTokenRepository) Delete(id int) error {
 	var refreshToken models.RefreshToken
 	return r.DB().Delete(&refreshToken, id).Error

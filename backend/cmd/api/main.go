@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"cmd/api/internal/db"
+	"cmd/api/internal/observability"
 	"cmd/api/internal/routes"
 
 	"github.com/gin-contrib/cors"
@@ -17,7 +18,9 @@ import (
 func main() {
 	db.InitPostgres()
 
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery())
+	router.Use(observability.RequestMiddleware())
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://app.localhost"},
@@ -30,9 +33,9 @@ func main() {
 
 	api := router.Group("/api/v1")
 
-	api.GET("/healthz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	api.GET("/health", observability.Health)
+	api.GET("/healthz", observability.Health)
+	api.GET("/metrics", observability.Metrics)
 
 	api.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")

@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ModalService } from '../modal/modal.service';
+import { Auth } from '../../core/auth/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,6 +12,7 @@ import { ModalService } from '../modal/modal.service';
 })
 export class SidebarComponent {
   private modalService = inject(ModalService);
+  authService = inject(Auth)
 
   openTicketModal() {
     this.modalService.open();

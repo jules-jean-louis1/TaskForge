@@ -23,8 +23,14 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile.dev
+    restart: unless-stopped
     ports:
       - "${BACKEND_PORT_DEV}:50051"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:50051/api/v1/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       ENV: development
       DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}?sslmode=disable"
@@ -46,6 +52,7 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile.dev
+    restart: unless-stopped
     ports:
       - "4200:4200"
     environment:

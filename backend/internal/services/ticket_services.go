@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"cmd/api/internal/models"
+	"cmd/api/internal/observability"
 	"cmd/api/internal/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -98,6 +99,8 @@ func CreateTicket(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	observability.RecordTicketCreated()
 
 	if assignedUUID != nil {
 		history := models.TicketAssignmentHistory{

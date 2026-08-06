@@ -1,0 +1,199 @@
+@if (ticket(); as currentTicket) {
+  <form (ngSubmit)="onSubmit()" class="ticket-page-container">
+    <header class="ticket-header">
+      <button class="header-return-button tf-button tf-button--secondary" (click)="ButtonBackTicket()" type="button">
+        <span>←</span>
+        <span>Retour</span>
+      </button>
+      <div class="header-meta">
+        <span class="ticket-id">#{{ currentTicket.id.substring(0, 8) }}</span>
+        <span class="created-at"
+          >Created: {{ currentTicket.createdAt | date: 'MMM dd, yyyy HH:mm' }}</span
+        >
+      </div>
+      <div class="header-title-row">
+        @if (isEditMode) {
+          <input
+            name="title"
+            id="title"
+            class="tf-input ticket-title-input"
+            [ngModel]="draftTitle()"
+            (ngModelChange)="draftTitle.set($event)"
+            placeholder="Titre du ticket"
+          />
+        } @else {
+          <h1>{{ currentTicket.title }}</h1>
+        }
+        @if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'tech')) {
+          <button type="button" class="btn-copy-link tf-button tf-button--secondary" (click)="onEdit()">
+            <span>✏️</span> {{ isEditMode ? 'Annuler' : 'Éditer' }}
+          </button>
+        }
+      </div>
+    </header>
+
+    <div class="ticket-grid">
+      <div class="main-column">
+        <section class="card">
+          <h3>Description</h3>
+          @if (isEditMode) {
+            <textarea
+              name="description"
+              id="description"
+              class="tf-textarea"
+              [ngModel]="draftDescription()"
+              (ngModelChange)="draftDescription.set($event)"
+            ></textarea>
+          } @else {
+            <p class="description-text">{{ currentTicket.description }}</p>
+          }
+        </section>
+
+        <section class="card">
+          <h3>Historique d'activité</h3>
+
+          <div class="timeline">
+            @for (history of currentTicket.assignmentHistories; track history.id) {
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                  <div class="timeline-header">
+                    <span class="user-name">
+                      @if (history.assignedByUser) {
+                        {{ history.assignedByUser.firstname }}
+                        {{ history.assignedByUser.lastname }}
+                      } @else {
+                        Système
+                      }
+                    </span>
+                    <span class="time-ago">{{
+                      history.assignedAt | date: 'dd/MM/yyyy HH:mm'
+                    }}</span>
+                  </div>
+
+                  <p class="timeline-action">
+                    @if (history.assignedToUser) {
+                      Assigné à
+                      <strong
+                        >{{ history.assignedToUser.firstname }}
+                        {{ history.assignedToUser.lastname }}</strong
+                      >
+                    } @else {
+                      Ticket non assigné
+                    }
+                    <span class="history-status-tag">[{{ history.statusAtAssignment }}]</span>
+                  </p>
+
+                  @if (history.endedAt) {
+                    <span class="ended-at"
+                      >Fin d'assignation : {{ history.endedAt | date: 'dd/MM/yyyy HH:mm' }}</span
+                    >
+                  }
+                </div>
+              </div>
+            } @empty {
+              <p class="empty-history">Aucun historique d'assignation pour ce ticket.</p>
+            }
+          </div>
+        </section>
+      </div>
+
+      <aside class="sidebar-column">
+        @switch (currentUser?.role) {
+          @case ('admin') {
+            <section class="card config-card">
+              <h3>Configuration</h3>
+
+              <div class="form-group">
+                <label for="status">Statut</label>
+                <select
+                  id="status"
+                  class="form-control tf-select"
+                  name="status"
+                  [ngModel]="draftStatus()"
+                  (ngModelChange)="draftStatus.set($event)"
+                >
+                  <option value="open">Ouvert</option>
+                  <option value="in_progress">En cours</option>
+                  <option value="resolved">Résolu</option>
+                  <option value="closed">Fermé</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="priority">Priorité</label>
+                <select
+                  id="priority"
+                  class="form-control tf-select"
+                  name="priority"
+                  [ngModel]="draftPriority()"
+                  (ngModelChange)="draftPriority.set($event)"
+                >
+                  <option value="low">Basse</option>
+                  <option value="mid">Moyenne</option>
+                  <option value="high">Haute</option>
+                  <option value="critical">Critique</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="assignee">Assigné à</label>
+                <div class="field-readonly tf-input">
+                  @if (currentTicket.assignee) {
+                    {{ currentTicket.assignee.firstname }} {{ currentTicket.assignee.lastname }}
+                  } @else {
+                    Non assigné
+                  }
+                </div>
+              </div>
+
+              <hr class="divider" />
+
+              <div class="action-buttons">
+                <button type="submit" class="btn-purple tf-button tf-button--primary" [disabled]="isSaving()">
+                  {{ isSaving() ? 'Enregistrement...' : 'Enregistrer' }}
+                </button>
+
+                <div class="btn-group-row">
+                  <button type="button" class="btn-outline-purple tf-button tf-button--secondary" (click)="draftStatus.set('in_progress')">
+                    En cours
+                  </button>
+                  <button type="button" class="btn-outline-green tf-button tf-button--secondary" (click)="draftStatus.set('resolved')">
+                    Résoudre
+                  </button>
+                </div>
+
+                <button type="button" class="btn-outline-gray tf-button tf-button--secondary" (click)="draftStatus.set('closed')">
+                  Fermer
+                </button>
+              </div>
+            </section>
+          }
+        }
+
+        <section class="card properties-card">
+          <h4>Propriétés</h4>
+
+          <div class="prop-row">
+            <span class="prop-label">Auteur</span>
+            <span class="prop-value font-bold">
+              {{ currentTicket.creator.firstname }} {{ currentTicket.creator.lastname }}
+            </span>
+          </div>
+
+          <div class="prop-row">
+            <span class="prop-label">Created</span>
+            <span class="prop-value">{{ currentTicket.createdAt | date: 'short' }}</span>
+          </div>
+
+          <div class="prop-row">
+            <span class="prop-label">Updated</span>
+            <span class="prop-value">{{ currentTicket.updatedAt | date: 'short' }}</span>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </form>
+} @else {
+  <div class="loading-state">Chargement du ticket...</div>
+}

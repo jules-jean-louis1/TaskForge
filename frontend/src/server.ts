@@ -13,6 +13,14 @@ const app = express();
 app.set('trust proxy', true);
 const angularApp = new AngularNodeAppEngine();
 
+app.get('/healthz', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    frontend: 'up',
+    service: 'ready',
+  });
+});
+
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.

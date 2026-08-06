@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../core/auth/auth';
-import { error } from 'console';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,14 +12,14 @@ import { Router } from '@angular/router';
 })
 export class LoginForm {
   private router = inject(Router);
-  private authService = inject(Auth)
+  private authService = inject(Auth);
 
   email: string = '';
   password: string = '';
 
 
   onSubmit() {
-    if (!this.email && !this.password) {
+    if (!this.email || !this.password) {
       return;
     }
     this.authService.login(this.email, this.password).subscribe({
@@ -29,7 +28,7 @@ export class LoginForm {
           this.authService.isLogged.set(true)
           setTimeout(() => {
             this.router.navigate(['/']);
-          }, 5000);
+          }, 300);
         }
       },
       error: (error) => {
