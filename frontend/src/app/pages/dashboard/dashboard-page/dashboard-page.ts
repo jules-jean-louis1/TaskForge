@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TicketService } from '../../../core/services/ticket-service';
 import { UserService } from '../../../core/services/user-service';
 import { Ticket, User } from '../../../core/models/models';
@@ -11,7 +11,7 @@ import { Ticket, User } from '../../../core/models/models';
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
   private ticketService = inject(TicketService);
   private userService = inject(UserService);
 

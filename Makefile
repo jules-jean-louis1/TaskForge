@@ -101,6 +101,18 @@ format-back: # Formate le code source du backend avec gofumpt
 test-all: # Exécute les tests unitaires du backend avec go test
 	@cd backend && go test -v ./tests/...
 
+
+# --- FRONTEND ---
+
+lint-front: # Exécute ESLint pour vérifier le code source du frontend
+	@cd frontend && npm run lint
+
+lint-front-fix: # Exécute ESLint et corrige automatiquement les problèmes détectés dans le code source du frontend
+	@cd frontend && npm run lint:fix
+
+install-front: # Installe les dépendances du frontend avec npm
+	@cd frontend && npm install
+
 # --- Aide ---
 
 help: # Affiche la liste et la description de toutes les commandes disponibles

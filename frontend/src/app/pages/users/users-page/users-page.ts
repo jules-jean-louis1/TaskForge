@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService, CreateUserPayload, UpdateUserPayload } from '../../../core/services/user-service';
 import { User } from '../../../core/models/models';
@@ -11,7 +11,7 @@ import { User } from '../../../core/models/models';
   templateUrl: './users-page.html',
   styleUrl: './users-page.css',
 })
-export class UsersPage {
+export class UsersPage implements OnInit {
   private userService = inject(UserService);
   users = signal<User[]>([]);
   loading = signal(true);

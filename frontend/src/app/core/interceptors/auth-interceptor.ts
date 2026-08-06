@@ -14,9 +14,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  // Prevent multiple simultaneous refresh calls which would revoke the same token
-  // and cause "Refresh token invalide" for concurrent requests.
-  // Shared state at module level is acceptable here since interceptor is singleton.
   if ((authInterceptor as any)._isInitialized !== true) {
     (authInterceptor as any)._isRefreshing = false;
     (authInterceptor as any)._refreshSubject = new BehaviorSubject<string | null>(null);
@@ -40,7 +37,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
-      // If a refresh is already in progress, wait for it to complete and retry
       if ((authInterceptor as any)._isRefreshing) {
         return refreshSubject.pipe(
           filter((token) => token != null),
@@ -54,7 +50,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         );
       }
 
-      // No refresh in progress -> start one
       (authInterceptor as any)._isRefreshing = true;
       refreshSubject.next(null);
 
