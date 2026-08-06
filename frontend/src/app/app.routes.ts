@@ -5,6 +5,8 @@ import { guestGuard } from './core/guards/guest.guard';
 import { TicketsPage } from './pages/tickets/tickets-page';
 import { authGuard } from './core/guards/auth-guard';
 import { TicketPage } from './pages/ticket/ticket-page/ticket-page';
+import { DashboardPage } from './pages/dashboard/dashboard-page/dashboard-page';
+import { UsersPage } from './pages/users/users-page/users-page';
 
 export const routes: Routes = [
   {
@@ -28,6 +30,18 @@ export const routes: Routes = [
     path: 'ticket/:id',
     title: 'TaskForge - Ticket',
     component: TicketPage,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard',
+    title: 'TaskForge - Dashboard',
+    component: DashboardPage,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'users',
+    title: 'TaskForge - Utilisateurs',
+    component: UsersPage,
     canActivate: [authGuard],
   },
 ];

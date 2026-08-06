@@ -40,6 +40,18 @@
     </select>
   </div>
 
+  @if (authService.currentUser()?.role === 'admin' || authService.currentUser()?.role === 'tech') {
+    <div class="form-group">
+      <label for="assigned_to">Assigner à</label>
+      <select id="assigned_to" class="tf-select" name="assigned_to" [(ngModel)]="ticketData.assigned_to">
+        <option value="">-- Pas d’assignation --</option>
+        @for (user of users; track user.id) {
+          <option [value]="user.id">{{ user.firstname }} {{ user.lastname }}</option>
+        }
+      </select>
+    </div>
+  }
+
   <div class="form-actions">
     <button type="button" class="tf-button tf-button--secondary" (click)="closeModal()">Annuler</button>
     <button type="submit" class="tf-button tf-button--primary">Valider</button>

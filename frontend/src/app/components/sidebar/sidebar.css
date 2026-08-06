@@ -55,7 +55,7 @@
   left: 0;
   width: 4px;
   height: 100%; /* Prend toute la hauteur (84px) */
-  background: linear-gradient(180deg, #ff4e50 0%, #f92053 50%, #8c1bab 100%);
+  background: #1b57db;
   border-radius: 0 4px 4px 0;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -73,8 +73,8 @@
 
 /* ÉTAT ACTIF (quand la route correspond à l'URL) */
 .nav-link.active {
-  color: #f92053; /* Couleur thème Angular active */
-  background-color: #fff1f2; /* Fond très léger rosé */
+  color: #1b57db;
+  background-color: rgba(27, 87, 219, 0.08);
   font-weight: 600;
 }
 

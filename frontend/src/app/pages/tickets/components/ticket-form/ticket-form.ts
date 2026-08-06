@@ -3,7 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { ModalService } from '../../../../components/modal/modal.service';
 import { TicketService } from '../../../../core/services/ticket-service';
 import { CategoryService } from '../../../../core/services/category-service';
-import { Category } from '../../../../core/models/models';
+import { UserService } from '../../../../core/services/user-service';
+import { Category, User } from '../../../../core/models/models';
+import { Auth } from '../../../../core/auth/auth';
 
 @Component({
   selector: 'app-ticket-form',
@@ -14,15 +16,18 @@ import { Category } from '../../../../core/models/models';
 })
 export class TicketForm implements OnInit {
   public categories: Category[] = [];
+  public users: User[] = [];
 
   private modalService = inject(ModalService);
   private _ticketService = inject(TicketService);
   private _CategoryService = inject(CategoryService);
+  private _userService = inject(UserService);
+  private authService = inject(Auth);
 
   ticketData = {
     title: '',
     description: '',
-    priority: 'LOW',
+    priority: 'low',
     category_id: '',
     status: '',
     assigned_to: '',
@@ -35,20 +40,28 @@ export class TicketForm implements OnInit {
         this.categories = res;
       },
     });
+
+    this._userService.getAll().subscribe({
+      next: (res: User[]) => {
+        this.users = res.filter((user) => user.role === 'tech' || user.role === 'admin');
+      },
+    });
   }
 
   submitTicket() {
-    console.log('Envoi du ticket :', this.ticketData);
+    const canAssign = this.authService.currentUser()?.role === 'admin' || this.authService.currentUser()?.role === 'tech';
+    const assignedTo = canAssign ? this.ticketData.assigned_to : '';
+
     this._ticketService
       .create(
         this.ticketData.title,
         this.ticketData.priority,
         this.ticketData.description,
-        this.ticketData.assigned_to,
+        assignedTo,
         parseInt(this.ticketData.category_id),
       )
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.closeModal();
         },
         error: (err) => {

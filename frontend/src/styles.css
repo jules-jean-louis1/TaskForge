@@ -8,9 +8,9 @@
 	--tf-text: #0f172a;
 	--tf-text-muted: #64748b;
 	--tf-border: rgba(148, 163, 184, 0.24);
-	--tf-accent: #f92053;
-	--tf-accent-2: #8c1bab;
-	--tf-accent-soft: rgba(249, 32, 83, 0.12);
+	--tf-accent: #1b57db;
+	--tf-accent-2: #153f9d;
+	--tf-accent-soft: rgba(27, 87, 219, 0.12);
 	--tf-success: #16a34a;
 	--tf-warning: #d97706;
 	--tf-danger: #dc2626;
@@ -19,8 +19,8 @@
 	--tf-radius-lg: 1rem;
 	--tf-radius-md: 0.75rem;
 	--tf-radius-sm: 0.5rem;
-	--tf-gradient: linear-gradient(135deg, #ff4e50 0%, #f92053 46%, #8c1bab 100%);
-	--tf-gradient-soft: linear-gradient(135deg, rgba(255, 78, 80, 0.14) 0%, rgba(249, 32, 83, 0.1) 46%, rgba(140, 27, 171, 0.14) 100%);
+	--tf-gradient: #1b57db;
+	--tf-gradient-soft: rgba(27, 87, 219, 0.12);
 }
 
 html,
@@ -39,10 +39,7 @@ body {
 		'Segoe UI',
 		sans-serif;
 	color: var(--tf-text);
-	background:
-		radial-gradient(circle at top left, rgba(249, 32, 83, 0.14), transparent 28%),
-		radial-gradient(circle at top right, rgba(140, 27, 171, 0.12), transparent 26%),
-		linear-gradient(180deg, #fbfcfe 0%, var(--tf-bg) 100%);
+	background: var(--tf-bg);
 }
 
 * {
@@ -129,7 +126,7 @@ select {
 .tf-textarea:focus-visible,
 .tf-select:focus-visible,
 .form-control:focus-visible {
-	outline: 3px solid rgba(249, 32, 83, 0.22);
+	outline: 3px solid rgba(27, 87, 219, 0.22);
 	outline-offset: 2px;
 }
 
@@ -138,8 +135,8 @@ select {
 .btn-submit,
 .btn-purple {
 	color: #fff;
-	background: var(--tf-gradient);
-	box-shadow: 0 14px 28px rgba(249, 32, 83, 0.22);
+	background: #1b57db;
+	box-shadow: none;
 }
 
 .tf-button--secondary,
@@ -148,16 +145,17 @@ select {
 .btn-outline-green,
 .btn-outline-gray,
 .btn-loggout,
-.header-return-button {
-	background: rgba(255, 255, 255, 0.82);
-	color: var(--tf-text);
-	border: 1px solid var(--tf-border);
+.header-return-button,
+.add-btn {
+	background: #ffffff;
+	color: #1b57db;
+	border: 1px solid #1b57db;
 }
 
 .tf-button--ghost,
 .btn-toggle {
 	background: transparent;
-	color: var(--tf-accent);
+	color: #1b57db;
 }
 
 .tf-input,
