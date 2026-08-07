@@ -31,7 +31,7 @@ func TestUserRoutes_Functional(t *testing.T) {
 		}
 		jsonBody, _ := json.Marshal(body)
 
-		req, _ := http.NewRequest(http.MethodPost, "/api/v1/users/", bytes.NewBuffer(jsonBody))
+		req, _ := http.NewRequest(http.MethodPost, "/api/v1/users", bytes.NewBuffer(jsonBody))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+adminToken)
 
@@ -58,7 +58,7 @@ func TestUserRoutes_Functional(t *testing.T) {
 		}
 		jsonBody, _ := json.Marshal(body)
 
-		req, _ := http.NewRequest(http.MethodPost, "/api/v1/users/", bytes.NewBuffer(jsonBody))
+		req, _ := http.NewRequest(http.MethodPost, "/api/v1/users", bytes.NewBuffer(jsonBody))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+userToken)
 
@@ -76,7 +76,7 @@ func TestUserRoutes_Functional(t *testing.T) {
 	t.Run("GET /users - Should return list of users", func(t *testing.T) {
 		token := GenerateTestToken("user-uuid-456", "standard")
 
-		req, _ := http.NewRequest(http.MethodGet, "/api/v1/users/?role=standard", nil)
+		req, _ := http.NewRequest(http.MethodGet, "/api/v1/users?role=standard", nil)
 		req.Header.Set("Authorization", "Bearer "+token)
 
 		resp := httptest.NewRecorder()
@@ -125,7 +125,7 @@ func TestUserRoutes_Functional(t *testing.T) {
 	// 5. TEST : Refus d'accès sans token (401 Unauthorized)
 	// ------------------------------------------------------------------
 	t.Run("GET /users - Should return 401 when no token is provided", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodGet, "/api/v1/users/", nil)
+		req, _ := http.NewRequest(http.MethodGet, "/api/v1/users", nil)
 
 		resp := httptest.NewRecorder()
 		router.ServeHTTP(resp, req)

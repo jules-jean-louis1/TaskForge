@@ -41,4 +41,5 @@ export class TicketList {
   navigateToTicket(id: string) {
     this.router.navigate(['/ticket', id]);
   }
+
 }

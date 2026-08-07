@@ -32,10 +32,24 @@ func (r *TicketsRepository) Count() (int64, error) {
 
 func (r *TicketsRepository) FindByID(id string) (*models.Ticket, error) {
 	var ticket models.Ticket
-	err := r.DB().Preload("Assignee").Preload("Creator").Preload("Category").First(&ticket, "id = ?", id).Error
+
+	err := r.DB().
+		Preload("Assignee").
+		Preload("Creator").
+		Preload("Category").
+		// 1. Preload de la liste d'historique (trié par date décroissante)
+		Preload("AssignmentHistories", func(db *gorm.DB) *gorm.DB {
+			return db.Order("assigned_at DESC")
+		}).
+		// 2. Preload des sous-relations à l'intérieur de chaque historique
+		Preload("AssignmentHistories.AssignedToUser").
+		Preload("AssignmentHistories.AssignedByUser").
+		First(&ticket, "id = ?", id).Error
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &ticket, nil
 }
 

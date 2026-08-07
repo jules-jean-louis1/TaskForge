@@ -27,12 +27,25 @@ export interface Category {
   name: string;
 }
 
+export interface TicketAssignmentHistory {
+  id: number;
+  ticketId: string;
+  assignedToUserId?: string;
+  assignedByUserId?: string;
+  assignedAt: string;
+  endedAt?: string; 
+  statusAtAssignment: 'open' | 'in_progress' | 'resolved' | 'closed';
+
+  assignedToUser?: User;
+  assignedByUser?: User;
+}
+
 export interface Ticket {
   id: string;
   title: string;
   description: string;
-  status: Status;
-  priority: Priority;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'low' | 'mid' | 'high' | 'critical';
   categoryId?: number;
   createdBy?: string;
   assignedTo?: string;
@@ -43,20 +56,9 @@ export interface Ticket {
   category?: Category;
   creator?: User;
   assignee?: User;
-}
 
-export interface TicketAssignmentHistory {
-  id: number;
-  ticketId: string;
-  assignedToUserId?: string;
-  assignedByUserId?: string;
-  assignedAt: string;
-  endedAt?: string;
-  statusAtAssignment: Status;
-
-  ticket?: Ticket;
-  assignedToUser?: User;
-  assignedByUser?: User;
+  // ➕ AJOUTER CETTE LIGNE
+  assignmentHistories?: TicketAssignmentHistory[];
 }
 
 export interface RefreshToken {

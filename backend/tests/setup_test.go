@@ -29,7 +29,10 @@ func SetupRouter() *gin.Engine {
 		_ = os.Setenv("JWT_SECRET", "super-secret-key-for-test")
 	}
 
-	router := gin.Default()
+	router := gin.New()
+	router.RedirectTrailingSlash = false
+	router.RedirectFixedPath = false
+	router.Use(gin.Recovery())
 
 	dsn := os.Getenv("DATABASE_TEST_URL")
 	if dsn == "" {
@@ -68,17 +71,11 @@ func GenerateTestToken(userIDStr string, role string) string {
 		userID = uuid.New()
 	}
 
-	var u models.User
-	email := "test@example.com"
-	if err := testDB.First(&u, "id = ?", userID).Error; err == nil {
-		email = u.Email
-	}
-
 	claims := middleware.Claims{
 		ID:        userID.String(),
 		Firstname: "Test",
 		Lastname:  "User",
-		Email:     email,
+		Email:     "test@example.com",
 		Role:      role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),

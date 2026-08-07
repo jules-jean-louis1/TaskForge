@@ -1,19 +1,42 @@
 @if (ticket(); as currentTicket) {
   <form (ngSubmit)="onSubmit()" class="ticket-page-container">
+    <!-- HEADER -->
     <header class="ticket-header">
-      <button
-        class="header-return-button tf-button tf-button--secondary"
-        (click)="ButtonBackTicket()"
-        type="button"
-      >
-        <span>←</span>
-        <span>Retour</span>
-      </button>
+      <div class="header-button-container">
+        <button
+          class="header-return-button tf-button tf-button--secondary"
+          (click)="ButtonBackTicket()"
+          type="button"
+        >
+          <span>←</span>
+          <span>Retour</span>
+        </button>
+        <div class="header-button-edit">
+          <!-- Boutons Éditer / Sauvegarder (Admin & Tech) -->
+          @if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'tech')) {
+            <div class="header-actions">
+              <button
+                type="button"
+                class="btn-copy-link tf-button tf-button--secondary"
+                (click)="onEdit()"
+              >
+                <span>✏️</span> {{ isEditMode ? 'Annuler' : 'Éditer' }}
+              </button>
+
+              @if (isEditMode) {
+                <button type="submit" class="tf-button tf-button--primary" [disabled]="isSaving()">
+                  {{ isSaving() ? 'Enregistrement...' : 'Sauvegarder' }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
       <div class="header-meta">
         <span class="ticket-id">#{{ currentTicket.id.substring(0, 8) }}</span>
-        <span class="created-at"
-          >Created: {{ currentTicket.createdAt | date: 'MMM dd, yyyy HH:mm' }}</span
-        >
+        <span class="created-at">
+          Created: {{ currentTicket.createdAt | date: 'MMM dd, yyyy HH:mm' }}
+        </span>
       </div>
       <div class="header-title-row">
         @if (isEditMode) {
@@ -28,19 +51,12 @@
         } @else {
           <h1>{{ currentTicket.title }}</h1>
         }
-        @if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'tech')) {
-          <button
-            type="button"
-            class="btn-copy-link tf-button tf-button--secondary"
-            (click)="onEdit()"
-          >
-            <span>✏️</span> {{ isEditMode ? 'Annuler' : 'Éditer' }}
-          </button>
-        }
       </div>
     </header>
 
+    <!-- GRID -->
     <div class="ticket-grid">
+      <!-- COLONNE GAUCHE -->
       <div class="main-column">
         <section class="card">
           <h3>Description</h3>
@@ -57,9 +73,9 @@
           }
         </section>
 
+        <!-- HISTORIQUE -->
         <section class="card">
           <h3>Historique d'activité</h3>
-
           <div class="timeline">
             @for (history of currentTicket.assignmentHistories; track history.id) {
               <div class="timeline-item">
@@ -68,15 +84,14 @@
                   <div class="timeline-header">
                     <span class="user-name">
                       @if (history.assignedByUser) {
-                        {{ history.assignedByUser.firstname }}
-                        {{ history.assignedByUser.lastname }}
+                        {{ history.assignedByUser.firstname }} {{ history.assignedByUser.lastname }}
                       } @else {
                         Système
                       }
                     </span>
-                    <span class="time-ago">{{
-                      history.assignedAt | date: 'dd/MM/yyyy HH:mm'
-                    }}</span>
+                    <span class="time-ago">
+                      {{ history.assignedAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </span>
                   </div>
 
                   <p class="timeline-action">
@@ -93,9 +108,9 @@
                   </p>
 
                   @if (history.endedAt) {
-                    <span class="ended-at"
-                      >Fin d'assignation : {{ history.endedAt | date: 'dd/MM/yyyy HH:mm' }}</span
-                    >
+                    <span class="ended-at">
+                      Fin d'assignation : {{ history.endedAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </span>
                   }
                 </div>
               </div>
@@ -106,30 +121,34 @@
         </section>
       </div>
 
+      <!-- SIDEBAR DROITE -->
       <aside class="sidebar-column">
-        @switch (currentUser?.role) {
-          @case ('admin') {
-            <section class="card config-card">
-              <h3>Configuration</h3>
+        <!-- CONFIGURATION : Accessible ADMIN et TECH -->
+        @if (currentUser?.role === 'admin' || currentUser?.role === 'tech') {
+          <section class="card config-card">
+            <h3>Configuration</h3>
 
-              <div class="form-group">
-                <label for="status">Statut</label>
-                <select
-                  id="status"
-                  class="form-control tf-select"
-                  name="status"
-                  [ngModel]="draftStatus()"
-                  (ngModelChange)="draftStatus.set($event)"
-                >
-                  <option value="open">Ouvert</option>
-                  <option value="in_progress">En cours</option>
-                  <option value="resolved">Résolu</option>
-                  <option value="closed">Fermé</option>
-                </select>
-              </div>
+            <!-- STATUT (Modifiable par Admin et Tech) -->
+            <div class="form-group">
+              <label for="status">Statut</label>
+              <select
+                id="status"
+                class="form-control tf-select"
+                name="status"
+                [ngModel]="draftStatus()"
+                (ngModelChange)="draftStatus.set($event)"
+              >
+                <option value="open">Ouvert</option>
+                <option value="in_progress">En cours</option>
+                <option value="resolved">Résolu</option>
+                <option value="closed">Fermé</option>
+              </select>
+            </div>
 
-              <div class="form-group">
-                <label for="priority">Priorité</label>
+            <!-- PRIORITÉ : Modifiable UNIQUEMENT par l'Admin -->
+            <div class="form-group">
+              <label for="priority">Priorité</label>
+              @if (currentUser?.role === 'admin') {
                 <select
                   id="priority"
                   class="form-control tf-select"
@@ -142,10 +161,35 @@
                   <option value="high">Haute</option>
                   <option value="critical">Critique</option>
                 </select>
-              </div>
+              } @else {
+                <!-- Affichage lecture seule pour le Technicien / Standard -->
+                <div class="field-readonly tf-input">
+                  <span class="badge-priority {{ currentTicket.priority }}">
+                    {{ currentTicket.priority | uppercase }}
+                  </span>
+                </div>
+              }
+            </div>
 
-              <div class="form-group">
-                <label for="assignee">Assigné à</label>
+            <!-- ASSIGNÉ À : Modifiable UNIQUEMENT par l'Admin -->
+            <div class="form-group">
+              <label for="assignee">Assigné à</label>
+              @if (currentUser?.role === 'admin') {
+                <select
+                  id="assignee"
+                  class="form-control tf-select"
+                  name="assignee"
+                  [ngModel]="draftAssigneeId() ?? ''"
+                  (ngModelChange)="draftAssigneeId.set($event ? $event : undefined)"
+                >
+                  <option value="">Non assigné</option>
+                  @for (user of users(); track user.id) {
+                    <option [value]="user.id">
+                      {{ user.firstname }} {{ user.lastname }} ({{ user.role }})
+                    </option>
+                  }
+                </select>
+              } @else {
                 <div class="field-readonly tf-input">
                   @if (currentTicket.assignee) {
                     {{ currentTicket.assignee.firstname }} {{ currentTicket.assignee.lastname }}
@@ -153,65 +197,67 @@
                     Non assigné
                   }
                 </div>
-              </div>
+              }
+            </div>
 
-              <hr class="divider" />
+            <hr class="divider" />
 
-              <div class="action-buttons">
-                <button
-                  type="submit"
-                  class="btn-purple tf-button tf-button--primary"
-                  [disabled]="isSaving()"
-                >
-                  {{ isSaving() ? 'Enregistrement...' : 'Enregistrer' }}
-                </button>
+            <!-- BOUTONS D'ACTION RAPIDES POUR STATUT -->
+            <div class="action-buttons">
+              <button
+                type="submit"
+                class="btn-purple tf-button tf-button--primary"
+                [disabled]="isSaving()"
+              >
+                {{ isSaving() ? 'Enregistrement...' : 'Enregistrer les changements' }}
+              </button>
 
-                <div class="btn-group-row">
-                  <button
-                    type="button"
-                    class="btn-outline-purple tf-button tf-button--secondary"
-                    (click)="draftStatus.set('in_progress')"
-                  >
-                    En cours
-                  </button>
-                  <button
-                    type="button"
-                    class="btn-outline-green tf-button tf-button--secondary"
-                    (click)="draftStatus.set('resolved')"
-                  >
-                    Résoudre
-                  </button>
-                </div>
-
+              <div class="btn-group-row">
                 <button
                   type="button"
-                  class="btn-outline-gray tf-button tf-button--secondary"
-                  (click)="draftStatus.set('closed')"
+                  class="btn-outline-purple tf-button tf-button--secondary"
+                  (click)="updateStatusQuickly('in_progress')"
                 >
-                  Fermer
+                  En cours
+                </button>
+                <button
+                  type="button"
+                  class="btn-outline-green tf-button tf-button--secondary"
+                  (click)="updateStatusQuickly('resolved')"
+                >
+                  Résoudre
                 </button>
               </div>
-            </section>
-          }
+
+              <button
+                type="button"
+                class="btn-outline-gray tf-button tf-button--secondary"
+                (click)="updateStatusQuickly('closed')"
+              >
+                Fermer
+              </button>
+            </div>
+          </section>
         }
 
+        <!-- PROPRIÉTÉS (Visible par tout le monde) -->
         <section class="card properties-card">
           <h4>Propriétés</h4>
 
           <div class="prop-row">
             <span class="prop-label">Auteur</span>
             <span class="prop-value font-bold">
-              {{ currentTicket.creator.firstname }} {{ currentTicket.creator.lastname }}
+              {{ currentTicket.creator?.firstname }} {{ currentTicket.creator?.lastname }}
             </span>
           </div>
 
           <div class="prop-row">
-            <span class="prop-label">Created</span>
+            <span class="prop-label">Créé le</span>
             <span class="prop-value">{{ currentTicket.createdAt | date: 'short' }}</span>
           </div>
 
           <div class="prop-row">
-            <span class="prop-label">Updated</span>
+            <span class="prop-label">Mis à jour</span>
             <span class="prop-value">{{ currentTicket.updatedAt | date: 'short' }}</span>
           </div>
         </section>
