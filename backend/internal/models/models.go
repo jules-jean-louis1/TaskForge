@@ -63,9 +63,10 @@ type Ticket struct {
 	UpdatedAt   time.Time  `json:"updatedAt"`
 	ResolvedAt  *time.Time `json:"resolvedAt,omitempty"`
 
-	Category *Category `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
-	Creator  *User     `gorm:"foreignKey:CreatedBy" json:"creator,omitempty"`
-	Assignee *User     `gorm:"foreignKey:AssignedTo" json:"assignee,omitempty"`
+	Category            *Category                 `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
+	Creator             *User                     `gorm:"foreignKey:CreatedBy" json:"creator,omitempty"`
+	Assignee            *User                     `gorm:"foreignKey:AssignedTo" json:"assignee,omitempty"`
+	AssignmentHistories []TicketAssignmentHistory `gorm:"foreignKey:TicketID" json:"assignmentHistories,omitempty"`
 }
 
 type TicketAssignmentHistory struct {

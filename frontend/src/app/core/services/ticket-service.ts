@@ -1,6 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Ticket } from '../models/models';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +35,8 @@ export class TicketService {
     status: string,
     assigned_to?: string,
     category_id?: number,
-  ) {
-    return this.http.patch<any>(`${this.config.apiUrl}/tickets/${id}`, {
+  ): Observable<Ticket> {
+    return this.http.patch<Ticket>(`${this.config.apiUrl}/tickets/${id}`, {
       title,
       description,
       priority,
@@ -72,7 +74,7 @@ export class TicketService {
     return this.http.get<any>(`${this.config.apiUrl}/tickets`, { params });
   }
 
-  getOne(id: string) {
-    return this.http.get(`${this.config.apiUrl}/tickets/${id}`);
+  getOne(id: string): Observable<Ticket> {
+    return this.http.get<Ticket>(`${this.config.apiUrl}/tickets/${id}`);
   }
 }

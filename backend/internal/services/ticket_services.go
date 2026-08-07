@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -177,20 +178,11 @@ func UpdateTicket(c *gin.Context) {
 		return
 	}
 
-	roleValue, exists := c.Get("role")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
+	roleValue, _ := c.Get("role")
 	role := roleValue.(string)
 
-	userIDValue, exists := c.Get("user_id")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
+	userIDValue, _ := c.Get("user_id")
 	userIDStr := userIDValue.(string)
-
 	userUUID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
@@ -210,6 +202,7 @@ func UpdateTicket(c *gin.Context) {
 		return
 	}
 
+	// 1. Mettre à jour les champs basiques d'abord
 	if req.Title != nil {
 		ticket.Title = *req.Title
 	}
@@ -224,6 +217,40 @@ func UpdateTicket(c *gin.Context) {
 		ticket.CategoryID = &catID
 	}
 
+	// 2. Mettre à jour le statut
+	if req.Status != nil {
+		newStatus := models.Status(*req.Status)
+
+		switch role {
+		case "admin":
+			ticket.Status = newStatus
+
+		case "tech":
+			if !isAssignee && !isCreator {
+				c.JSON(http.StatusForbidden, gin.H{"error": "forbidden"})
+				return
+			}
+
+			if ticket.Status == newStatus {
+				// Pas de changement
+			} else if ticket.Status == models.StatusOpen && newStatus == models.StatusInProgress {
+				ticket.Status = newStatus
+			} else if ticket.Status == models.StatusInProgress && (newStatus == models.StatusResolved || newStatus == models.StatusClosed) {
+				ticket.Status = newStatus
+				now := time.Now()
+				ticket.ResolvedAt = &now
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "invalid status transition"})
+				return
+			}
+
+		case "standard":
+			c.JSON(http.StatusForbidden, gin.H{"error": "standard user cannot change status"})
+			return
+		}
+	}
+
+	// 3. Mettre à jour l'assignation et créer l'historique
 	if req.AssignedTo != nil {
 		if role != "admin" && role != "tech" {
 			c.JSON(http.StatusForbidden, gin.H{"error": "only tech/admin can assign"})
@@ -231,7 +258,10 @@ func UpdateTicket(c *gin.Context) {
 		}
 
 		if *req.AssignedTo == "" {
-			ticket.AssignedTo = nil
+			if ticket.AssignedTo != nil {
+				_ = ticketHistoryRepo.EndActiveAssignment(ticket.ID)
+				ticket.AssignedTo = nil
+			}
 		} else {
 			assignedUUID, err := uuid.Parse(*req.AssignedTo)
 			if err != nil {
@@ -239,7 +269,9 @@ func UpdateTicket(c *gin.Context) {
 				return
 			}
 
+			// Déclenché uniquement si l'assigné A CHANGÉ
 			if ticket.AssignedTo == nil || *ticket.AssignedTo != assignedUUID {
+				// Ferme la précédente assignation s'il y en avait une
 				_ = ticketHistoryRepo.EndActiveAssignment(ticket.ID)
 
 				ticket.AssignedTo = &assignedUUID
@@ -248,45 +280,18 @@ func UpdateTicket(c *gin.Context) {
 					TicketID:           ticket.ID,
 					AssignedToUserID:   &assignedUUID,
 					AssignedByUserID:   &userUUID,
-					StatusAtAssignment: ticket.Status,
+					StatusAtAssignment: ticket.Status, // Prendra le NOUVEAU statut mis à jour juste au-dessus
 				}
-				_ = ticketHistoryRepo.Create(&history)
+
+				if err := ticketHistoryRepo.Create(&history); err != nil {
+					// Log de l'erreur au cas où la BDD rejette l'insertion (ex: FK manquante)
+					log.Printf("Erreur lors de la création de l'historique: %v", err)
+				}
 			}
 		}
 	}
 
-	if req.Status != nil {
-		newStatus := models.Status(*req.Status)
-
-		switch role {
-		case "admin":
-			ticket.Status = newStatus
-		case "tech":
-			if !isAssignee && !isCreator {
-				c.JSON(http.StatusForbidden, gin.H{"error": "forbidden"})
-				return
-			}
-			if ticket.Status == models.StatusOpen && newStatus == models.StatusInProgress {
-				ticket.Status = newStatus
-			} else if ticket.Status == models.StatusInProgress && (newStatus == models.StatusResolved || newStatus == models.StatusClosed) {
-				ticket.Status = newStatus
-				if newStatus == models.StatusResolved || newStatus == models.StatusClosed {
-					now := time.Now()
-					ticket.ResolvedAt = &now
-				}
-			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "invalid status transition"})
-				return
-			}
-		case "standard":
-			c.JSON(http.StatusForbidden, gin.H{"error": "standard user cannot change status"})
-			return
-		default:
-			c.JSON(http.StatusForbidden, gin.H{"error": "forbidden"})
-			return
-		}
-	}
-
+	// 4. Sauvegarder le ticket final
 	if err := ticketRepo.Update(ticket); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
